@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FlatList, ActivityIndicator, Text, View} from 'react-native';
 
-// This is the home screen
+// This is the home screen which contains a chit list
 class HomeScreen extends Component{
 	// Constructor to set the states
 	constructor(props){
@@ -11,10 +11,11 @@ class HomeScreen extends Component{
 			chitListData: []
 		}
 	}
-	// A function to retrieve chits
+	// A function to do GET/chits request
 	getData(){
 		// Will be changed to 10.0.2.2 in the future for uni 
 		return fetch('http://192.168.0.22:3333/api/v0.0.5/chits')
+		
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({
@@ -40,7 +41,7 @@ class HomeScreen extends Component{
 				</View>
 			)
 		}
-		
+		// iterate data in a flatlist
 		return(
 			<View>
 				<FlatList

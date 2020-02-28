@@ -1,5 +1,8 @@
 CHANGELOG
 
+VERSION: Server v5
+1. Fixed the GET /chits endpoint so that it doesn't break when you are logged in. This literally meant adding a single space to a SQL query.
+
 VERSION: API v0.0.5 and Server v4
 1. Changed references to /updatephoto in specification to /photo
 2. When getting a users information, the server now returns the ID of the user as per the specification

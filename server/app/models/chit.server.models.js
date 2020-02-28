@@ -72,7 +72,7 @@ const list = function(params, done){
     let query = 'SELECT chittr_chit.chit_id AS chit_id, chittr_chit.chit_timestamp AS timestamp, chittr_chit.chit_content AS chit_content, chittr_chit.chit_userid AS user_id, chittr_chit_location.chit_id AS location_chitid, chittr_chit_location.longitude AS longitude, chittr_chit_location.latitude AS latitude, chittr_user.user_familyname AS family_name, chittr_user.user_givenname AS given_name, chittr_user.user_email AS email FROM chittr_chit LEFT JOIN chittr_chit_location ON chittr_chit.chit_id = chittr_chit_location.chit_id LEFT JOIN chittr_user ON chittr_chit.chit_userid = chittr_user.user_id';
 
     if(params["logged_in"]){
-        query += 'WHERE chittr_chit.chit_userid = ' + params["user_id"] + ' OR chittr_chit.chit_userid IN (SELECT chittr_user_following.following_id FROM chittr_user_following WHERE chittr_user_following.user_id = ' + params['user_id'] + ')';
+        query += ' WHERE chittr_chit.chit_userid = ' + params["user_id"] + ' OR chittr_chit.chit_userid IN (SELECT chittr_user_following.following_id FROM chittr_user_following WHERE chittr_user_following.user_id = ' + params['user_id'] + ')';
     }
 
     query += ' ORDER BY chittr_chit.chit_timestamp DESC';
