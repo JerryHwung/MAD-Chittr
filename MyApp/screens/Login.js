@@ -13,8 +13,7 @@ export default class Login extends Component{
 	handleSubmit = values => {
 		
 		if(values.email.length>0 && values.password.length>0){
-			// 192.168.0.22
-			return fetch ('http://192.168.1.103:3333/api/v0.0.5/login',
+			return fetch ('http://192.168.0.22:3333/api/v0.0.5/login',
 			{
 				method: 'POST',
 				headers: {
@@ -39,10 +38,10 @@ export default class Login extends Component{
 				}
 			})
 			.then(responseJson => {
-				// extract token for authorisation
-				console.log(responseJson.token);
+				// extract token and id for authorisation
+				console.log(responseJson);
 				// Store it with AsyncStorage
-				AsyncStorage.setItem('key', responseJson.token)
+				this.storeAuth('auth', responseJson)
 			})
 			.catch((error)=>{
 				console.error(error);
@@ -51,6 +50,14 @@ export default class Login extends Component{
 	}
 	
 	goToSignup = () => this.props.navigation.navigate('SignUp')
+	
+	async storeAuth(key, item){
+		try{
+			await AsyncStorage.setItem(key, JSON.stringify(item));
+		} catch (error) {
+			console.log(error.message);
+		}
+	}
 	
 	render(){
 		return(
