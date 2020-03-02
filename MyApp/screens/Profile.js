@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, Button, AsyncStorage} from 'react-native';
+import {NavigationEvents} from 'react-navigation';
 import FormButton from '../components/FormButton'
 
 const profilePic = require('../images/default.jpg');
@@ -56,6 +57,7 @@ class Profile extends Component{
 	render(){
 		return(
 			<View style={styles.container}>
+			<NavigationEvents onDidFocus={() => this.getUser()}/>
 				<View style={styles.header}>
 					<View style={styles.buttonContainer}>
 						<FormButton

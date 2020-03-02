@@ -28,9 +28,6 @@ export const MainStack = createStackNavigator({
 	},
 	Chit: {
 		screen: Chit
-	}, 
-	Profile: {
-		screen: Profile
 	}
 })
 
