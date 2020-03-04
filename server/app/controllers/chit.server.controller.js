@@ -183,7 +183,7 @@ exports.attach_photo = function(req, res){
                 //     file_ext = "jpeg";
                 // };
                 console.log('add_photo:', _id, file_ext,);
-                req.pipe(fs.createWriteStream('./photo_repo/chit' + _id + '.' + file_ext));
+                req.pipe(fs.createWriteStream('./photo_repo/chit' + chit_id + '.' + file_ext));
 
                 res.sendStatus(201);
 
