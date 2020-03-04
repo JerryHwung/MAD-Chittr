@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, TextInput, AsyncStorage, Alert} from 'react-nati
 import {Button} from 'react-native-elements';
 
 // This screen will contain a textarea to let user create chits
-class Chit extends Component{
+class PostChit extends Component{
 	// Constructor to set the states
 	constructor(props){
 		super(props);
@@ -112,4 +112,4 @@ const styles = StyleSheet.create({
 		justifyContent:'flex-end',
 	},
 })
-export default Chit
+export default PostChit
