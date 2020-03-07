@@ -22,12 +22,32 @@ import Chit from './screens/Chit'
 import Search from './screens/Search'
 import PostChit from './screens/PostChit'
 
+// OtherUserStack screens
+import OtherProfile from './screens/OtherProfile'
+import Followers from './screens/Followers'
+import Following from './screens/Following'
+
 export const MainStack = createStackNavigator({
 	Home: {
 		screen: HomeScreen
 	},
 	Chit: {
 		screen: Chit
+	}
+})
+
+export const OtherUserStack = createStackNavigator({
+	Search: {
+		screen: Search
+	},
+	OtherProfile: {
+		screen: OtherProfile
+	},
+	Followers: {
+		screen: Followers
+	},
+	Following: {
+		screen: Following
 	}
 })
 
@@ -39,7 +59,7 @@ export const Tabs = createBottomTabNavigator({
 		screen: PostChit
 	},
 	Search: {
-		screen: Search
+		screen: OtherUserStack
 	}
 })
 
@@ -60,6 +80,7 @@ export const LoginStack = createStackNavigator({
 		screen: SignUp
 	}
 })
+
 
 export const Drawer = createDrawerNavigator({
 	Home: {screen: Tabs},

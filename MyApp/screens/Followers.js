@@ -1,19 +1,23 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, AsyncStorage} from 'react-native';
-import {SearchBar, ListItem} from 'react-native-elements';
+import {ListItem} from 'react-native-elements';
 
 const profilePic = require('../images/default.jpg');
 
-export default class Search extends Component{
-	
+export default class Followers extends Component{
 	// Constructor to set the states
 	constructor(props){
 		super(props);
 		this.state={
-			userListData: [],
-			search: '',
+			followersList: [],
 		}
 	}
+	
+	// Navigate to OtherProfile after saving the id in AsyncStorage
+	moreDetails = id => {
+		this.storeId(id);
+		this.props.navigation.push('OtherProfile');
+	} 
 	
 	async storeId(id){
 		try{
@@ -24,43 +28,29 @@ export default class Search extends Component{
 		}
 	}
 	
-	updateSearch = text => {
-		// change state of 'search'
-		this.setState({search: text});
-		if(text == ''){
+	async getFollowers(){
+		let id = JSON.parse(await AsyncStorage.getItem('id'));
+		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/followers')
+		.then((response)=>response.json())
+		.then((responseJson)=>{
 			this.setState({
-				userListData: [],
+				followersList: responseJson,
 			});
-		} else {
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/search_user?q=' + text)
-			.then(response => response.json())
-			.then(responseJson => {
-				this.setState({
-					userListData: responseJson,
-				});
-			})
-			.catch((error)=>{
-				console.log(error);
-			});
-		}
+		})
+		.catch((error)=>{
+			console.log(error);
+		});
 	}
 	
-	// Navigate to OtherProfile after saving the id in AsyncStorage
-	moreDetails = id => {
-		this.storeId(id);
-		this.props.navigation.navigate('OtherProfile');
-	} 
+	componentDidMount(){
+		this.getFollowers();
+	}
 	
 	render(){
 		return(
 			<View style={styles.viewStyle}>
-				<SearchBar
-					placeholder="Type here..."
-					onChangeText={this.updateSearch}
-					value={this.state.search}
-				/>
 				<FlatList
-					data={this.state.userListData}
+					data={this.state.followersList}
 					renderItem={({item}) => (
 						<ListItem
 							leftAvatar={{source: {profilePic}}}
