@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {StyleSheet, ActivityIndicator, Text, View, Image, AsyncStorage} from 'react-native';
-import {Button} from 'react-native-elements';
+import {StyleSheet, FlatList, ActivityIndicator, Text, View, Image, AsyncStorage} from 'react-native';
+import {Button, ListItem} from 'react-native-elements';
 import FormButton from '../components/FormButton'
 
 const profilePic = require('../images/default.jpg');
@@ -148,7 +148,7 @@ export default class OtherProfile extends Component{
 			)
 		}
 		return(
-			<View>
+			<View style={{flex: 1}}>
 				<View style={styles.header}>
 					<View style={styles.buttonContainer}>
 					<FormButton
@@ -184,6 +184,19 @@ export default class OtherProfile extends Component{
 				</View>
 					</View>
 				</View>
+				<FlatList style={{marginTop: 150}}
+						data={this.state.userDetails.recent_chits}
+						renderItem={({item}) => (
+							<ListItem 
+								title={item.chit_content}
+								subtitle={new Date(item.timestamp).toUTCString()}
+								bottomDivider
+								chevron
+								onPress={() => console.log("check chit")}
+							/>
+						)}
+						keyExtractor={({chit_id}, index) => chit_id}
+					/>
 			</View>
 		);
 	}

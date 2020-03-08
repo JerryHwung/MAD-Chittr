@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FlatList, ActivityIndicator, Text, View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
+import {ListItem} from 'react-native-elements';
 
 // This is the home screen which contains a chit list
 class HomeScreen extends Component{
@@ -48,7 +49,15 @@ class HomeScreen extends Component{
 			<NavigationEvents onDidFocus={() => this.getData()}/>
 				<FlatList
 					data={this.state.chitListData}
-					renderItem={({item}) => <Text>{item.chit_content}</Text>}
+					renderItem={({item}) => (
+						<ListItem 
+							title={item.chit_content}
+							subtitle={new Date(item.timestamp).toUTCString()}
+							bottomDivider
+							chevron
+							onPress={() => console.log("check chit")}
+						/>
+					)}
 					keyExtractor={({chit_id}, index) => chit_id}
 				/>
 			</View>

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, Button, AsyncStorage} from 'react-native';
+import {StyleSheet, Text, View, FlatList, Image, Button, AsyncStorage} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
+import {ListItem} from 'react-native-elements';
 import FormButton from '../components/FormButton'
 
 const profilePic = require('../images/default.jpg');
@@ -56,7 +57,7 @@ class Profile extends Component{
 	
 	render(){
 		return(
-			<View style={styles.container}>
+			<View style={{flex: 1}}>
 			<NavigationEvents onDidFocus={() => this.getUser()}/>
 				<View style={styles.header}>
 					<View style={styles.buttonContainer}>
@@ -81,6 +82,19 @@ class Profile extends Component{
 						<Text style={styles.email}>{this.state.userDetails.email}</Text>
 					</View>
 				</View>
+				<FlatList style={{marginTop: 80}}
+						data={this.state.userDetails.recent_chits}
+						renderItem={({item}) => (
+							<ListItem 
+								title={item.chit_content}
+								subtitle={new Date(item.timestamp).toUTCString()}
+								bottomDivider
+								chevron
+								onPress={() => console.log("check chit")}
+							/>
+						)}
+						keyExtractor={({chit_id}, index) => chit_id}
+					/>
 			</View>
 		);
 	}
@@ -106,6 +120,11 @@ class Profile extends Component{
 }
 
 const styles = StyleSheet.create({
+	container:{
+		width: 300,
+		marginBottom: 15,
+		marginTop: 50
+	},
 	header:{
 		backgroundColor: "#00BFFF",
 		height:150,
