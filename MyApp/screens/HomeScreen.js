@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {FlatList, ActivityIndicator, Text, View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {ListItem} from 'react-native-elements';
+import {baseUrl} from '../components/baseUrl';
 
 // This is the home screen which contains a chit list
 class HomeScreen extends Component{
@@ -13,25 +14,23 @@ class HomeScreen extends Component{
 			chitListData: []
 		}
 	}
-	// A function to do GET/chits request
+	// An async function to do GET/chits request
 	getData(){
-		// Will be changed to 10.0.2.2 in the future for uni 
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/chits')
-		
-		.then((response)=>response.json())
+		return fetch(baseUrl+'/chits')
+		.then((response)=> response.json())
 		.then((responseJson)=>{
 			this.setState({
 				isLoading: false,
 				chitListData: responseJson,
 			});
 		})
-		.catch((error)=>{
-			console.log(error);
+		.catch((err)=>{
+			console.error(err);
 		});
 	}
 	
 	componentDidMount(){
-		this.getData();
+		this.getData()
 	}
 	
 	render(){

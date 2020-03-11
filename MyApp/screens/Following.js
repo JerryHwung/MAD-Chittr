@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, AsyncStorage} from 'react-native';
 import {ListItem} from 'react-native-elements';
+import {baseUrl} from '../components/baseUrl'
 
 const profilePic = require('../images/default.jpg');
 
@@ -29,7 +30,7 @@ export default class Following extends Component{
 	
 	async getFollowers(){
 		let id = JSON.parse(await AsyncStorage.getItem('id'));
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/following')
+		return fetch(baseUrl+'/user/'+id+'/following')
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({

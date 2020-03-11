@@ -6,6 +6,8 @@ import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import * as yup from 'yup'
 import ErrorMessage from '../components/ErrorMessage'
+import {baseUrl} from '../components/baseUrl'
+import {Avatar} from 'react-native-elements';
 
 const profilePic = require('../images/default.jpg');
 
@@ -15,6 +17,7 @@ class EditProfile extends Component {
 		super(props);
 		this.state={
 			isLodaing: true,
+			photo: '',
 			userDetails: {},
 			auth:{}
 		}
@@ -22,7 +25,7 @@ class EditProfile extends Component {
 	// Send patch request to server when save button is pressed
 	handleSubmit = values => {
 		if (values.given_name.length > 0 && values.family_name.length > 0 && values.email.length > 0 && values.password.length > 0) {
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/user/' + this.state.auth.id,
+			return fetch(baseUrl+'/user/' + this.state.auth.id,
 			{
 				method: 'PATCH',
 				withCredentials: true,
@@ -51,6 +54,10 @@ class EditProfile extends Component {
 		}
 	}
 	
+	imagePressed(){
+		this.props.navigation.navigate('EditPhoto')
+	}
+	
 	async getUser(){
 		let response = await AsyncStorage.getItem('auth');
 		let authKey = await JSON.parse(response) || {};
@@ -58,11 +65,30 @@ class EditProfile extends Component {
 			auth: authKey
 		});
 		this.getData(this.state.auth.id)
+		this.getPhoto(this.state.auth.id)
 	}
+	
+	getPhoto(id){
+		return fetch(baseUrl+'/user/'+id+'/photo')
+		.then(response => response.blob())
+		.then((image)=>{
+			var reader = new FileReader();
+			reader.onload =()=>{
+				this.setState({
+					isLoading: false,
+					photo: reader.result
+				});
+			}
+			reader.readAsDataURL(image);
+		})
+		.catch((error)=>{
+			console.log(error);
+		});
+	}
+	
 	// A function to do GET/user request to retrieve user details
 	getData(id){
-		// Will be changed to 10.0.2.2 in the future for uni 
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/' + id)
+		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({
@@ -100,7 +126,13 @@ class EditProfile extends Component {
 									/>
 								</View>
 							</View>
-							<Image style={styles.avatar} source = {profilePic}/>
+							<Avatar style={styles.avatar}
+								size="xlarge"
+								rounded
+								source={{uri: this.state.photo}}
+								onPress={()=>this.imagePressed()}
+								activeOpacity={0.7}
+							/>
 							<FormInput
 								name="Given Name"
 								value={values.given_name}

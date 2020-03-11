@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 // UserStack screens
 import Profile from './screens/Profile'
 import EditProfile from './screens/EditProfile'
+import EditPhoto from './screens/EditPhoto'
 
 // LoginStack screens
 import Login from './screens/Login'
@@ -69,6 +70,9 @@ export const UserStack = createStackNavigator({
 	},
 	EditProfile: {
 		screen: EditProfile
+	},
+	EditPhoto: {
+		screen: EditPhoto
 	}
 })
 

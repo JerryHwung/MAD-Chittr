@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, AsyncStorage} from 'react-native';
 import {SearchBar, ListItem} from 'react-native-elements';
+import {baseUrl} from '../components/baseUrl'
 
 const profilePic = require('../images/default.jpg');
 
@@ -32,7 +33,7 @@ export default class Search extends Component{
 				userListData: [],
 			});
 		} else {
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/search_user?q=' + text)
+			return fetch(baseUrl+'/search_user?q=' + text)
 			.then(response => response.json())
 			.then(responseJson => {
 				this.setState({

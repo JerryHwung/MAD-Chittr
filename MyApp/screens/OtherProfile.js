@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet, FlatList, ActivityIndicator, Text, View, Image, AsyncStorage} from 'react-native';
 import {Button, ListItem} from 'react-native-elements';
 import FormButton from '../components/FormButton'
+import {baseUrl} from '../components/baseUrl'
 
 const profilePic = require('../images/default.jpg');
 
@@ -40,7 +41,7 @@ export default class OtherProfile extends Component{
 	// A function to do GET/user request to retrieve user details
 	getData(id){
 		// Will be changed to 10.0.2.2 in the future for uni 
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/' + id)
+		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({
@@ -53,7 +54,7 @@ export default class OtherProfile extends Component{
 	}
 	// Function to retrieve followers
 	getFollowers(id){
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/followers')
+		return fetch(baseUrl+'/user/'+id+'/followers')
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			// Find the logged in user is a follower or not
@@ -74,7 +75,7 @@ export default class OtherProfile extends Component{
 	}
 	// Function to retrieve following
 	getFollowing(id){
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/following')
+		return fetch(baseUrl+'/user/'+id+'/following')
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({
@@ -96,7 +97,7 @@ export default class OtherProfile extends Component{
 		let key = this.state.auth.token
 		
 		if(this.state.isFollowing == true){
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/follow',{
+			return fetch(baseUrl+'/user/'+id+'/follow',{
 				method: 'DELETE',
 				withCredentials: true,
 				headers:{
@@ -116,7 +117,7 @@ export default class OtherProfile extends Component{
 				console.log(error);
 			})
 		} else {
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/user/'+id+'/follow',{
+			return fetch(baseUrl+'/user/'+id+'/follow',{
 				method: 'POST',
 				withCredentials: true,
 				headers: {

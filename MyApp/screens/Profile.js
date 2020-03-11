@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, FlatList, Image, Button, AsyncStorage} from 'react-native';
+import {StyleSheet, Alert, Text, View, FlatList, Image, Button, TouchableOpacity, AsyncStorage} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
-import {ListItem} from 'react-native-elements';
+import {ListItem, Avatar} from 'react-native-elements';
 import FormButton from '../components/FormButton'
+import {baseUrl} from '../components/baseUrl'
 
 const profilePic = require('../images/default.jpg');
 
@@ -12,6 +13,7 @@ class Profile extends Component{
 		super(props);
 		this.state={
 			isLodaing: true,
+			photo: '',
 			userDetails: {},
 			auth:{}
 		}
@@ -34,15 +36,14 @@ class Profile extends Component{
 			auth: authKey
 		});
 		this.getData(this.state.auth.id)
+		this.getPhoto(this.state.auth.id)
 	}
 	// A function to do GET/user request to retrieve user details
-	getData(id){
-		// Will be changed to 10.0.2.2 in the future for uni 
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/' + id)
+	getData(id){ 
+		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({
-				isLoading: false,
 				userDetails: responseJson,
 			});
 		})
@@ -51,8 +52,30 @@ class Profile extends Component{
 		});
 	}
 	
+	getPhoto(id){
+		return fetch(baseUrl+'/user/'+id+'/photo')
+		.then(response => response.blob())
+		.then((image)=>{
+			var reader = new FileReader();
+			reader.onload =()=>{
+				this.setState({
+					isLoading: false,
+					photo: reader.result
+				});
+			}
+			reader.readAsDataURL(image);
+		})
+		.catch((error)=>{
+			console.log(error);
+		});
+	}
+	
 	componentDidMount(){
 		this.getUser();
+	}
+	
+	imagePressed(){
+		this.props.navigation.navigate('EditPhoto')
 	}
 	
 	render(){
@@ -75,7 +98,13 @@ class Profile extends Component{
 						/>
 					</View>
 				</View>
-				<Image style={styles.avatar} source = {profilePic}/>
+				<Avatar style={styles.avatar}
+					size="xlarge"
+					rounded
+					source={{uri: this.state.photo}}
+					onPress={()=>this.imagePressed()}
+					activeOpacity={0.7}
+				/>
 				<View style={styles.body}>
 					<View style={styles.bodyContent}>
 						<Text style={styles.name}>{this.state.userDetails.given_name} {this.state.userDetails.family_name}</Text>
@@ -93,14 +122,14 @@ class Profile extends Component{
 								onPress={() => console.log("check chit")}
 							/>
 						)}
-						keyExtractor={({chit_id}, index) => chit_id}
+						keyExtractor={({chit_id}, index) => chit_id.toString()}
 					/>
 			</View>
 		);
 	}
 	// Logout function
 	Logout = () =>{
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/logout', {
+		return fetch(baseUrl+'/logout', {
 			method: 'POST',
 			withCredentials: true,
 			headers: {
@@ -135,10 +164,8 @@ const styles = StyleSheet.create({
 		borderRadius: 63,
 		borderWidth: 4,
 		borderColor: "white",
-		marginBottom: 10,
 		alignSelf: 'center',
-		position: 'absolute',
-		marginTop: 80
+		marginTop:-60
 	},
 	name: {
 		fontSize: 22,
@@ -146,7 +173,6 @@ const styles = StyleSheet.create({
 		fontWeight:'600',
 	},
 	body: {
-		marginTop: 40,
 	},
 	bodyContent: {
 		flex: 1,

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TextInput, AsyncStorage, Alert} from 'react-native';
 import {Button} from 'react-native-elements';
+import {baseUrl} from '../components/baseUrl'
 
 // This screen will contain a textarea to let user create chits
 class PostChit extends Component{
@@ -16,7 +17,7 @@ class PostChit extends Component{
 	}
 	
 	postChit(token,user){
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/chits',
+		return fetch(baseUrl+'/chits',
 		{
 			method: 'POST',
 			withCredentials: true,
@@ -56,7 +57,7 @@ class PostChit extends Component{
 	// A function to do GET/user request to retrieve user details
 	getData(id){
 		// Will be changed to 10.0.2.2 in the future for uni 
-		return fetch('http://192.168.0.22:3333/api/v0.0.5/user/' + id)
+		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
 			this.setState({

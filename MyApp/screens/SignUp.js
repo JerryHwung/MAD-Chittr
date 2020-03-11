@@ -6,12 +6,13 @@ import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import * as yup from 'yup'
 import ErrorMessage from '../components/ErrorMessage'
+import {baseUrl} from '../components/baseUrl'
 
 export default class SignUp extends Component{
 	
 	handleSubmit = values => {
 		if (values.given_name.length > 0 && values.family_name.length > 0 && values.email.length > 0 && values.password.length > 0) {
-			return fetch('http://192.168.0.22:3333/api/v0.0.5/user/',
+			return fetch(baseUrl+'/user/',
 			{
 				method: 'POST',
 				headers: {
