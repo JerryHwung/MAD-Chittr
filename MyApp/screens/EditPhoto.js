@@ -27,7 +27,7 @@ export default class EditPhoto extends Component {
 		if(this.camera){
 			const options = {quality: 0.5, base64: true};
 			const data = await this.camera.takePictureAsync(options);
-			console.log(data.uri, this.state.token);
+			console.log(data);
 			
 			return fetch(baseUrl+'/user/photo',{
 				method: 'POST',

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Alert, Text, View, FlatList, Image, Button, TouchableOpacity, AsyncStorage} from 'react-native';
+import {StyleSheet, Alert, Text, View, ActivityIndicator, FlatList, Image, Button, TouchableOpacity, AsyncStorage} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {ListItem, Avatar} from 'react-native-elements';
 import FormButton from '../components/FormButton'
@@ -13,7 +13,7 @@ class Profile extends Component{
 		super(props);
 		this.state={
 			isLodaing: true,
-			photo: '',
+			photo: null,
 			userDetails: {},
 			auth:{}
 		}
@@ -62,6 +62,7 @@ class Profile extends Component{
 					isLoading: false,
 					photo: reader.result
 				});
+				console.log(this.state.photo);
 			}
 			reader.readAsDataURL(image);
 		})
@@ -79,6 +80,15 @@ class Profile extends Component{
 	}
 	
 	render(){
+		
+		// Display activity indicator while waiting data to appear
+		if(this.state.isLoading){
+			return(
+				<View>
+				<ActivityIndicator/>
+				</View>
+			)
+		}
 		return(
 			<View style={{flex: 1}}>
 			<NavigationEvents onDidFocus={() => this.getUser()}/>
