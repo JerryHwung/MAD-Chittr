@@ -2,14 +2,8 @@ import React, {Component} from 'react';
 import {StyleSheet, Image, Text, View, TextInput, AsyncStorage, Alert, PermissionsAndroid} from 'react-native';
 import {Button, Icon} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl'
-import ImagePicker from 'react-native-image-picker';
 import Geolocation from 'react-native-geolocation-service';
 
-const options = {
-	title: 'Select Image',
-	takePhotoButtonTitle: 'Take a photo',
-	chooseFromLibraryButtonTitle: 'Choose from library',
-};
 // This screen will contain a textarea to let user create chits
 class PostChit extends Component{
 	// Constructor to set the states
@@ -18,8 +12,9 @@ class PostChit extends Component{
 		this.state={
 			chitId: '',
 			auth: {},
-			image: {},
+			image: null,
 			location: null,
+			coords: null,
 			locationPermission: false,
 			text: '',
 			numChar: 141
@@ -33,6 +28,13 @@ class PostChit extends Component{
 		
 		Geolocation.getCurrentPosition(
 			(position) => {
+				let coords = {
+					'longitude': position.coords.longitude,
+					'latitude': position.coords.latitude
+				};
+				
+				this.setState({coords});
+				
 				const location = JSON.stringify(position.coords);
 				
 				this.setState({location});
@@ -48,20 +50,12 @@ class PostChit extends Component{
 		);
 	};
 	
+	receivedImage =(image) =>{
+		this.setState({image})
+	}
+	
 	handleImage = () => {
-		ImagePicker.showImagePicker(options,(response)=>{
-			if(response.didCancel){
-				console.log('User cancelled');
-			} else if(response.error){
-				console.log(response.error);
-			} else {
-				let source = {uri: 'data:image/jpeg;base64,'+response.data};
-				
-				this.setState({
-					image: source
-				});
-			}
-		})
+		this.props.navigation.navigate('Photo',{receivedImage: this.receivedImage});
 	}
 	
 	// This async function will get the first chit's id(which is the latest chit)
@@ -81,52 +75,88 @@ class PostChit extends Component{
 				'X-Authorization': token,
 				'Content-Type': 'image/jpeg'
 			},
-			body: this.state.image.uri
+			body: this.state.image
 		})
 		.then((response)=>{
 			console.log('Picture added!');
-			console.log(this.state.image.uri);
+			this.setState({
+				image: null
+			})
 		})
 		.catch((error)=>{
 			console.log(error);
 		});
 	}
 	
-	postChit(token,user){
-		return fetch(baseUrl+'/chits',
-		{
-			method: 'POST',
-			withCredentials: true,
-			headers: {
-				'X-Authorization': token,
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				timestamp: Date.parse(new Date()),
-				chit_content: this.state.text,
-				user: user,
+	postChit(token){
+		
+		if(this.state.coords == null){
+			return fetch(baseUrl+'/chits',
+			{
+				method: 'POST',
+				withCredentials: true,
+				headers: {
+					'X-Authorization': token,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					timestamp: Date.parse(new Date()),
+					chit_content: this.state.text,
+				})
 			})
-		})
-		.then((response)=>{
-			if(response.status == "201"){
+			.then((response)=>{
+				if(response.status == "201"){
 				// Upload image if the chit post successfully
 				// and image is not empty object
-				if(this.state.image != {}){
-					this.uploadPhoto();
+					if(this.state.image != null){
+						this.uploadPhoto();
+					}
+					Alert.alert("Chit posted successfully!")
+					// reset state
+					this.setState({
+						text: '',
+						numChar: 141,
+						coords: null,
+					});
+				} else {
+					Alert.alert("Chit failed to post...")
 				}
-				Alert.alert("Chit posted successfully!")
-				this.setState({
-					text: '',
-					numChar: 141,
-					image: {},
-				});
-			} else {
-				Alert.alert("Chit failed to post...")
-			}
-		})
-		.catch((error)=>{
-			console.error(error);
-		})
+			})
+		}
+		else {
+			return fetch(baseUrl+'/chits',
+			{
+				method: 'POST',
+				withCredentials: true,
+				headers: {
+					'X-Authorization': token,
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					timestamp: Date.parse(new Date()),
+					chit_content: this.state.text,
+					location: this.state.coords,
+				})
+			})
+			.then((response)=>{
+				if(response.status == "201"){
+				// Upload image if the chit post successfully
+				// and image is not empty object
+					if(this.state.image != null){
+						this.uploadPhoto();
+					}
+					Alert.alert("Chit posted successfully!")
+					// reset state
+					this.setState({
+						text: '',
+						numChar: 141,
+						coords: null,
+					});
+				} else {
+					Alert.alert("Chit failed to post...")
+				}
+			})
+		}
 	}
 	
 	async getUser(){
@@ -187,7 +217,7 @@ class PostChit extends Component{
 					</Text>
 					<Button 
 						title="Chit"
-						onPress={()=> {this.postChit(this.state.auth.token, this.state.userDetails)}}
+						onPress={()=> {this.postChit(this.state.auth.token)}}
 					/>
 				</View>
 				<Text>Location: {this.state.location}</Text>
@@ -219,7 +249,7 @@ async function requestLocationPermission(){
 	try {
 		const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
 			{
-				title: 'Lab04 Location Permission',
+				title: 'Location Permission',
 				message:'This app requires access to your location.',
 				buttonNeutral: 'Ask Me Later',
 				buttonNegative: 'Cancel',

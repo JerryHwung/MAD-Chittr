@@ -62,7 +62,6 @@ class Profile extends Component{
 					isLoading: false,
 					photo: reader.result
 				});
-				console.log(this.state.photo);
 			}
 			reader.readAsDataURL(image);
 		})

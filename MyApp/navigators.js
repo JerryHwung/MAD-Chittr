@@ -22,6 +22,7 @@ import Chit from './screens/Chit'
 // Tabs' screens
 import Search from './screens/Search'
 import PostChit from './screens/PostChit'
+import capturePhoto from './screens/capturePhoto'
 
 // OtherUserStack screens
 import OtherProfile from './screens/OtherProfile'
@@ -52,12 +53,21 @@ export const OtherUserStack = createStackNavigator({
 	}
 })
 
+export const PostChitStack = createStackNavigator({
+	Create: {
+		screen: PostChit
+	},
+	Photo: {
+		screen: capturePhoto
+	}
+})
+
 export const Tabs = createBottomTabNavigator({
 	Home: {
 		screen: MainStack
 	},
 	Create: {
-		screen: PostChit
+		screen: PostChitStack
 	},
 	Search: {
 		screen: OtherUserStack
