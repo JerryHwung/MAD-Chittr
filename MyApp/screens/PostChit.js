@@ -126,6 +126,7 @@ class PostChit extends Component{
 						text: '',
 						numChar: 141,
 						coords: null,
+						location: null,
 					});
 				} else {
 					Alert.alert("Chit failed to post...")
@@ -160,6 +161,7 @@ class PostChit extends Component{
 						text: '',
 						numChar: 141,
 						coords: null,
+						location: null,
 					});
 				} else {
 					Alert.alert("Chit failed to post...")
@@ -174,6 +176,7 @@ class PostChit extends Component{
 		this.setState({
 			auth: authKey
 		});
+		console.log(this.state.auth);
 	}
 	// A function to do GET/user request to retrieve user details
 	getChitId(id){ 
