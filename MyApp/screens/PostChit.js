@@ -3,6 +3,7 @@ import {StyleSheet, Image, Text, View, TextInput, AsyncStorage, Alert, Permissio
 import {Button, Icon} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl'
 import Geolocation from 'react-native-geolocation-service';
+import Geocoder from 'react-native-geocoding';
 
 // This screen will contain a textarea to let user create chits
 class PostChit extends Component{
@@ -25,7 +26,7 @@ class PostChit extends Component{
 		if(!this.state.locationPermission){
 			this.state.locationPermission = requestLocationPermission();
 		}
-		
+		// Use geolocation to get coordinates
 		Geolocation.getCurrentPosition(
 			(position) => {
 				let coords = {
@@ -35,9 +36,17 @@ class PostChit extends Component{
 				
 				this.setState({coords});
 				
-				const location = JSON.stringify(position.coords);
-				
-				this.setState({location});
+				// Reverse geocoding to get address
+				Geocoder.from(position.coords.latitude, position.coords.longitude)
+				.then(json => {
+					console.log(json);
+					let addressComponent = json.results[5].formatted_address;
+					this.setState({
+						location: addressComponent
+					})
+					console.log(addressComponent);
+				})
+				.catch(err => console.log(err));
 			},
 			(error)=>{
 				Alert.alert(error.message)
@@ -183,6 +192,7 @@ class PostChit extends Component{
 	
 	componentDidMount(){
 		this.getUser();
+		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
 	}
 
 	render(){
@@ -220,11 +230,42 @@ class PostChit extends Component{
 						onPress={()=> {this.postChit(this.state.auth.token)}}
 					/>
 				</View>
-				<Text>Location: {this.state.location}</Text>
-				<Image 
-					source={this.state.image}
-					style={{width: 200, height: 200}}	
-				/>
+				{this.state.location != null &&
+					<View style={styles.addOn}>
+						<Text> Location: {this.state.location}</Text>
+						<Icon
+							name='close-o'
+							type='evilicon'
+							color='#FF7256'
+							size= {25}
+							onPress={()=>{
+								this.setState({
+									location: null
+								});
+							}}
+						/>
+					</View>
+				}
+				{this.state.image != null &&
+					<View style={styles.addOn}>
+						<Image 
+							source={this.state.image}
+							style={{width: 200, height: 200}}	
+						/>
+						<Icon
+							name='close-o'
+							type='evilicon'
+							color='#FF7256'
+							size= {30}
+							onPress={()=>{
+								this.setState({
+									image: null
+								});
+							}}
+						/>
+					</View>		
+				}
+				
 			</View>
 		);
 	}
@@ -242,6 +283,10 @@ const styles = StyleSheet.create({
 		margin: 25,
 		flexDirection: 'row',
 		justifyContent:'flex-end',
+	},
+	addOn:{
+		flexDirection: 'row',
+		padding: 15,
 	},
 })
 

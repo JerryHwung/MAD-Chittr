@@ -1,6 +1,5 @@
 import React,{Component, Fragment} from 'react';
 import { View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert, Image, Button } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
 import {RNCamera} from 'react-native-camera';
 import {baseUrl} from '../components/baseUrl'
 
