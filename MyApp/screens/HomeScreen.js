@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {FlatList, ActivityIndicator, Text, View} from 'react-native';
+import {StyleSheet, FlatList, ActivityIndicator, Text, View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
-import {ListItem, Image, Card} from 'react-native-elements';
+import {ListItem, Image, Card, Avatar, Divider, Icon} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl';
+import Geocoder from 'react-native-geocoding';
 
 // This is the home screen which contains a chit list
 class HomeScreen extends Component{
@@ -13,6 +14,7 @@ class HomeScreen extends Component{
 			isLodaing: true,
 			photoList: [],
 			chitListData: [],
+			locationList: [],
 			refreshing: false,
 		}
 	}
@@ -21,7 +23,6 @@ class HomeScreen extends Component{
 		return fetch(baseUrl+'/chits')
 		.then((response)=> response.json())
 		.then((responseJson)=>{
-			
 			this.setState({
 				chitListData: responseJson,
 			});
@@ -32,11 +33,15 @@ class HomeScreen extends Component{
 	}
 	
 	componentDidMount(){
+		// Initiate geocoder
+		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
 		this.getData()
 		.then(async()=>{
 			// Async function to retrieve photo
 			const list = [];
+			const addressList = [];
 			for(var chit of this.state.chitListData){
+				// get photos
 				try{
 					let data = await this.getPhoto(chit.chit_id)
 					// made a async function to read blob data
@@ -45,13 +50,19 @@ class HomeScreen extends Component{
 				} catch(err){
 					console.log(err);
 				}
+				if(chit.location){
+					// get locations(address)
+					let address = await this.getLocation(chit.location);
+					addressList.push({id: chit.chit_id, location: address});
+				}
 			}
-			return list;
+			return [list, addressList];
 		})
 		.then((list)=>{
 			this.setState({
 				isLoading: false,
-				photoList: list,
+				photoList: list[0],
+				locationList: list[1],
 				refreshing: false,
 			});
 		})
@@ -63,6 +74,7 @@ class HomeScreen extends Component{
 		this.getData()
 		.then(async()=>{
 			const list = [];
+			const addressList = [];
 			for(var chit of this.state.chitListData){
 				try{
 					let data = await this.getPhoto(chit.chit_id)
@@ -71,13 +83,19 @@ class HomeScreen extends Component{
 				} catch(err){
 					console.log(err);
 				}
+				if(chit.location){
+					// get locations(address)
+					let address = await this.getLocation(chit.location);
+					addressList.push({id: chit.chit_id, location: address})
+				}
 			}
-			return list;
+			return [list, addressList];
 		})
 		.then((list)=>{
 			this.setState({
 				isLoading: false,
-				photoList: list,
+				photoList: list[0],
+				locationList: list[1],
 				refreshing: false,
 			});
 		})
@@ -102,8 +120,7 @@ class HomeScreen extends Component{
 			return await response.blob();
 		} else {
 			return null;
-		}
-		
+		}	
 	}
 	
 	handleRefresh = () => {
@@ -117,6 +134,39 @@ class HomeScreen extends Component{
 		if(response){
 		return (<Image source={{uri: response.image}} style={{height: 200, width: 200}}/>)
 		}
+	}
+	
+	showLocation(chit_id){
+		let response = this.state.locationList.find(add => add.id == chit_id);
+		if(response){
+			return (
+			<View style={styles.address}>
+				<Icon 
+					name='location'
+					type='evilicon'
+					color='gray'
+					size={18}
+				/>
+				<Text style={{color: 'gray'}}>{response.location}</Text>
+			</View>);
+		}
+	}
+	
+	// Translate coordiantes to human-readable address
+	// (Reverse Geocoding)
+	async getLocation(coords){
+		try{
+			let response = await Geocoder.from(coords.latitude, coords.longitude);
+			let addressComponent = await response.results[5].formatted_address;
+			return addressComponent;
+		}catch(err){
+			console.error(err);
+		}
+	}
+	
+	showTime(timestamp){
+		let time = new Date(timestamp);
+		return time.toUTCString();
 	}
 	
 	render(){
@@ -135,10 +185,23 @@ class HomeScreen extends Component{
 					<FlatList
 						data={this.state.chitListData}
 						renderItem={({item}) => (
-							<Card>
-								<View>
-									<Text>{item.chit_content}</Text>
+							<Card 
+								titleStyle={{textAlign: 'left'}} 
+								title={
+									<View style={styles.header}>
+										<Text style={{flex: 1, flexWrap: 'wrap'}}>{item.user.given_name} {item.user.family_name}</Text>
+										<Text style={{flex: 2, color: 'gray'}}>{this.showTime(item.timestamp)}</Text>
+									</View>
+									
+								}
+							>
+								<View style={{paddingTop: 10}}>
+									<Divider style={styles.divider}/>
+									<Text style={{marginBottom: 10}}>{item.chit_content}</Text>
 									{this.showImage(item.chit_id)}
+									{item.location &&
+										this.showLocation(item.chit_id)
+									}
 								</View>
 							</Card>
 							
@@ -152,5 +215,20 @@ class HomeScreen extends Component{
 		}
 	}
 }
+
+const styles = StyleSheet.create({
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+	},
+	divider: {
+		backgroundColor:'gray', 
+		marginBottom: 10,
+	},
+	address: {
+		marginTop: 10,
+		flexDirection: 'row',
+	},
+})
 
 export default HomeScreen
