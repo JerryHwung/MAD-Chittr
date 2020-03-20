@@ -16,7 +16,7 @@ import {ListItem, Avatar} from 'react-native-elements';
 import FormButton from '../components/FormButton'
 import {baseUrl} from '../components/baseUrl'
 
-class Profile extends Component{
+export default class Profile extends Component{
 	// Constructor to set the states
 	constructor(props){
 		super(props);
@@ -28,7 +28,7 @@ class Profile extends Component{
 		}
 	}
 	// Remove token and resets states similar to remove session
-	async removeUser(){
+	removeUser=async()=>{
 		try{
 			await AsyncStorage.removeItem('auth');
 			console.log("key removed");
@@ -43,7 +43,7 @@ class Profile extends Component{
 		}
 	}
 	// Retrieve authorization info and data about user
-	async getUser(){
+	getUser=async()=>{
 		let response = await AsyncStorage.getItem('auth');
 		let authKey = await JSON.parse(response) || {};
 		this.setState({
@@ -53,7 +53,7 @@ class Profile extends Component{
 		this.getPhoto(this.state.auth.id)
 	}
 	// A function to do GET/user request to retrieve user details
-	getData(id){ 
+	getData=id=>{ 
 		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
@@ -66,7 +66,7 @@ class Profile extends Component{
 		});
 	}
 	// Extract and read the base64 image
-	getPhoto(id){
+	getPhoto=id=>{
 		return fetch(baseUrl+'/user/'+id+'/photo')
 		.then(response => response.blob())
 		.then((image)=>{
@@ -88,7 +88,7 @@ class Profile extends Component{
 		this.getUser();
 	}
 	// User able to change image by clicking on avatar
-	imagePressed(){
+	imagePressed=()=>{
 		this.props.navigation.navigate('EditPhoto')
 	}
 	
@@ -220,5 +220,3 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 	},
 });
-
-export default Profile

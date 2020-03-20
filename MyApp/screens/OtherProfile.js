@@ -31,12 +31,12 @@ export default class OtherProfile extends Component{
 		}
 	}
 	
-	goToFollowers(){this.props.navigation.navigate('Followers');}
+	goToFollowers=()=>{this.props.navigation.navigate('Followers');}
 	
-	goToFollowing(){this.props.navigation.navigate('Following');}
+	goToFollowing=()=>{this.props.navigation.navigate('Following');}
 	// Extract token and param from previous navigator
 	// then extract data using the param
-	async getUser(){
+	getUser=async()=>{
 		try{
 			let response = await AsyncStorage.getItem('auth');
 			let authKey = await JSON.parse(response) || {};
@@ -53,7 +53,7 @@ export default class OtherProfile extends Component{
 		}
 	}
 	// A function to do GET/user request to retrieve user details
-	getData(id){
+	getData=id=>{
 		// Will be changed to 10.0.2.2 in the future for uni 
 		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
@@ -67,7 +67,7 @@ export default class OtherProfile extends Component{
 		});
 	}
 	// Function to retrieve followers
-	getFollowers(id){
+	getFollowers = id =>{
 		return fetch(baseUrl+'/user/'+id+'/followers')
 		.then((response)=>response.json())
 		.then((responseJson)=>{
@@ -88,7 +88,7 @@ export default class OtherProfile extends Component{
 		});
 	}
 	// Function to retrieve following
-	getFollowing(id){
+	getFollowing = id =>{
 		return fetch(baseUrl+'/user/'+id+'/following')
 		.then((response)=>response.json())
 		.then((responseJson)=>{
@@ -107,7 +107,7 @@ export default class OtherProfile extends Component{
 	}
 	// Act accrodingly to state of button,
 	// to decide follow or unfollow
-	follow(){
+	follow=()=>{
 		let id = this.state.userID
 		let key = this.state.auth.token
 		

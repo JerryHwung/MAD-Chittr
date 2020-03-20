@@ -63,7 +63,7 @@ export default class Login extends Component{
 	
 	goToSignup = () => this.props.navigation.navigate('SignUp')
 	
-	async storeAuth(key, item){
+	storeAuth =async(key, item)=>{
 		try{
 			await AsyncStorage.setItem(key, JSON.stringify(item));
 		} catch (error) {

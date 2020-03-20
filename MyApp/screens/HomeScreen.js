@@ -14,7 +14,7 @@ import Geocoder from 'react-native-geocoding';
 // Placeholder image
 const profilePic = require('../images/default.jpg');
 
-class HomeScreen extends Component{
+export default class HomeScreen extends Component{
 	// Constructor to set the states
 	constructor(props){
 		super(props);
@@ -27,7 +27,7 @@ class HomeScreen extends Component{
 		}
 	}
 	// An async function to do GET/chits request
-	getData(){
+	getData=()=>{
 		return fetch(baseUrl+'/chits')
 		.then((response)=> response.json())
 		.then((responseJson)=>{
@@ -79,7 +79,7 @@ class HomeScreen extends Component{
 	
 	// This will be called after user refresh the flatlist
 	// It is actually the same as componentDidMount()
-	getApiData(){
+	getApiData=()=>{
 		this.getData()
 		.then(async()=>{
 			const list = [];
@@ -113,7 +113,7 @@ class HomeScreen extends Component{
 	
 	// Used promise wrapper for file reading
 	// to prevent decode string set in wrong id
-	readFileAsync(file){
+	readFileAsync=file=>{
 		return new Promise((resolve, reject)=>{
 			let reader = new FileReader();
 			reader.onload = () => {
@@ -124,7 +124,7 @@ class HomeScreen extends Component{
 		})
 	}
 	// Extract photo as a blob data
-	async getPhoto(chit_id){
+	getPhoto=async(chit_id)=>{
 		let response = await fetch(baseUrl+'/chits/'+chit_id+'/photo')
 		if(response.status=='200'){
 			return await response.blob();
@@ -139,7 +139,7 @@ class HomeScreen extends Component{
 		}, function(){this.getApiData()});
 	}
 	// Get image uri from state and return an image
-	showImage(chit_id){
+	showImage = chit_id =>{
 		let response = this.state.photoList.find(img => img.id == chit_id);
 		if(response){
 		return (<Image source={{uri: response.image}} style={{height: 200, width: 200}}/>)
@@ -147,7 +147,7 @@ class HomeScreen extends Component{
 	}
 	// A small icon is added beside the readable address
 	// to indicate it is a loaction(also the text color is different)
-	showLocation(chit_id){
+	showLocation = chit_id =>{
 		let response = this.state.locationList.find(add => add.id == chit_id);
 		if(response){
 			return (
@@ -165,7 +165,7 @@ class HomeScreen extends Component{
 	
 	// Translate coordiantes to human-readable address
 	// (Reverse Geocoding)
-	async getLocation(coords){
+	getLocation = async(coords)=>{
 		try{
 			let response = await Geocoder.from(coords.latitude, coords.longitude);
 			let addressComponent = await response.results[5].formatted_address;
@@ -175,7 +175,7 @@ class HomeScreen extends Component{
 		}
 	}
 	// Translate timestamp to readable date and time
-	showTime(timestamp){
+	showTime=timestamp=>{
 		let time = new Date(timestamp);
 		return time.toUTCString();
 	}
@@ -246,5 +246,3 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 	},
 })
-
-export default HomeScreen

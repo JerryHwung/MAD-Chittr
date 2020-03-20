@@ -19,7 +19,7 @@ export default class EditPhoto extends Component {
 		}
 	}
 	
-	async getUser(){
+	getUser = async() =>{
 		let response = await AsyncStorage.getItem('auth');
 		let authKey = await JSON.parse(response) || {};
 		this.setState({
@@ -27,7 +27,7 @@ export default class EditPhoto extends Component {
 		});
 	}
 	
-	takePicture = async() => {
+	takePicture = async() =>{
 		if(this.camera){
 			const options = {quality: 0.5, base64: true};
 			const data = await this.camera.takePictureAsync(options);

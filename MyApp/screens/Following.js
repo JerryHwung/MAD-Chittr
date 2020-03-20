@@ -25,7 +25,7 @@ export default class Following extends Component{
 		this.props.navigation.push('OtherProfile');
 	}
 	
-	async storeId(id){
+	storeId=async(id)=>{
 		try{
 			// Asyncstorage only store strings hence id need to be string
 			await AsyncStorage.setItem('id', JSON.stringify(id));
@@ -34,7 +34,7 @@ export default class Following extends Component{
 		}
 	}
 	
-	async getFollowers(){
+	getFollowers=async()=>{
 		let id = JSON.parse(await AsyncStorage.getItem('id'));
 		return fetch(baseUrl+'/user/'+id+'/following')
 		.then((response)=>response.json())

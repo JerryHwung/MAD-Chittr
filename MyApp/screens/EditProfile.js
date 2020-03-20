@@ -18,7 +18,7 @@ import {Avatar} from 'react-native-elements';
 
 const profilePic = require('../images/default.jpg');
 
-class EditProfile extends Component {
+export default class EditProfile extends Component {
 	// Constructor to set the states
 	constructor(props){
 		super(props);
@@ -61,11 +61,11 @@ class EditProfile extends Component {
 		}
 	}
 	
-	imagePressed(){
+	imagePressed=()=>{
 		this.props.navigation.navigate('EditPhoto')
 	}
 	
-	async getUser(){
+	getUser=async()=>{
 		let response = await AsyncStorage.getItem('auth');
 		let authKey = await JSON.parse(response) || {};
 		this.setState({
@@ -75,7 +75,7 @@ class EditProfile extends Component {
 		this.getPhoto(this.state.auth.id)
 	}
 	
-	getPhoto(id){
+	getPhoto=id=>{
 		return fetch(baseUrl+'/user/'+id+'/photo')
 		.then(response => response.blob())
 		.then((image)=>{
@@ -94,7 +94,7 @@ class EditProfile extends Component {
 	}
 	
 	// A function to do GET/user request to retrieve user details
-	getData(id){
+	getData=id=>{
 		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
@@ -262,5 +262,3 @@ const validationSchema = yup.object().shape({
 		.required()
 		.min(4, 'Password must have at least 4 characters ')
 })
-
-export default EditProfile

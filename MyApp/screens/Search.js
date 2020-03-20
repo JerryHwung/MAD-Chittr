@@ -46,7 +46,7 @@ export default class Search extends Component{
 		}
 	}
 	
-	async storeId(id){
+	storeId=async(id)=>{
 		try{
 			// Asyncstorage only store strings hence id need to be string
 			await AsyncStorage.setItem('id', JSON.stringify(id));

@@ -21,7 +21,7 @@ import Geocoder from 'react-native-geocoding';
 import {NavigationEvents} from 'react-navigation';
 
 // This screen will contain a textarea to let user create chits
-class PostChit extends Component{
+export default class PostChit extends Component{
 	// Constructor to set the states
 	constructor(props){
 		super(props);
@@ -99,14 +99,14 @@ class PostChit extends Component{
 	
 	// This async function will get the first recent chit's id(which is the latest chit)
 	// then upload the photo to that chit.
-	async uploadPhoto(){
+	uploadPhoto=async()=>{
 		await this.getChitId(this.state.auth.id)
 		let chitId = this.state.chitId
 		let token = this.state.auth.token
 		await this.postPhoto(token,chitId)
 	}
 	
-	postPhoto(token,id){
+	postPhoto=(token,id)=>{
 		return fetch(baseUrl+'/chits/'+id+'/photo', {
 			method: 'POST',
 			withCredentials: true,
@@ -128,7 +128,7 @@ class PostChit extends Component{
 	}
 	// Contains two version of fetch api
 	// One is with location in body another without
-	postChit(token){
+	postChit=(token)=>{
 		
 		if(this.state.coords == null){
 			return fetch(baseUrl+'/chits',
@@ -203,7 +203,7 @@ class PostChit extends Component{
 	// To retrieve user's token and draft(s) belongs to user
 	// The JSON.parse is to load the json string to object
 	// because AsyncStorage only saves string.
-	async getUser(){
+	getUser=async()=>{
 		try{
 			let response = await AsyncStorage.getItem('auth');
 			let authKey = await JSON.parse(response) || {};
@@ -228,7 +228,7 @@ class PostChit extends Component{
 		
 	}
 	// A function to do GET/user request to retrieve user details
-	getChitId(id){ 
+	getChitId=(id)=>{ 
 		return fetch(baseUrl+'/user/' + id)
 		.then((response)=>response.json())
 		.then((responseJson)=>{
@@ -242,7 +242,7 @@ class PostChit extends Component{
 		});
 	}
 	// reset state and redirect to home screen 
-	resetInOverlay(){
+	resetInOverlay=()=>{
 		this.setState({
 			isVisible: false,
 			draft: null,
@@ -461,4 +461,3 @@ async function requestLocationPermission(){
 		}} 
 	catch (err) {console.warn(err);}
 }
-export default PostChit
