@@ -1,3 +1,10 @@
+/*
+	This screen allow user to change name and email.
+	Password is required to make any changes.
+	User can change avatar image here too.
+	The form here is validate by Formik and Yup.
+*/
+
 import React, {Component, Fragment} from 'react';
 import {StyleSheet, SafeAreaView, View, Text, Image, Alert, AsyncStorage} from 'react-native';
 import {Button, Icon} from 'react-native-elements';

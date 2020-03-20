@@ -1,12 +1,19 @@
+/*
+	The very first screen that welcomes the user.
+	Because home screen doesn't require token to access hence
+	I put it as first page. The user's avatar part is not complete yet,
+	so I addded default pic as a placeholder.(Could have use icons tho...)
+*/
+
 import React, {Component} from 'react';
 import {StyleSheet, FlatList, ActivityIndicator, Text, View} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {ListItem, Image, Card, Avatar, Divider, Icon} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl';
 import Geocoder from 'react-native-geocoding';
-
+// Placeholder image
 const profilePic = require('../images/default.jpg');
-// This is the home screen which contains a chit list
+
 class HomeScreen extends Component{
 	// Constructor to set the states
 	constructor(props){
@@ -34,7 +41,7 @@ class HomeScreen extends Component{
 	}
 	
 	componentDidMount(){
-		// Initiate geocoder
+		// Initiate geocoder for reverse geocoding, the string is my API Key
 		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
 		this.getData()
 		.then(async()=>{
@@ -70,7 +77,8 @@ class HomeScreen extends Component{
 		.catch(err=>{console.log(err)})
 	}
 	
-	// This will be called after user refresh the flatlist 
+	// This will be called after user refresh the flatlist
+	// It is actually the same as componentDidMount()
 	getApiData(){
 		this.getData()
 		.then(async()=>{
@@ -104,6 +112,7 @@ class HomeScreen extends Component{
 	}
 	
 	// Used promise wrapper for file reading
+	// to prevent decode string set in wrong id
 	readFileAsync(file){
 		return new Promise((resolve, reject)=>{
 			let reader = new FileReader();
@@ -123,7 +132,7 @@ class HomeScreen extends Component{
 			return null;
 		}	
 	}
-	
+	// Pull to refresh will trigger this function
 	handleRefresh = () => {
 		this.setState({
 			isFetching: true
@@ -136,7 +145,8 @@ class HomeScreen extends Component{
 		return (<Image source={{uri: response.image}} style={{height: 200, width: 200}}/>)
 		}
 	}
-	
+	// A small icon is added beside the readable address
+	// to indicate it is a loaction(also the text color is different)
 	showLocation(chit_id){
 		let response = this.state.locationList.find(add => add.id == chit_id);
 		if(response){
@@ -164,7 +174,7 @@ class HomeScreen extends Component{
 			console.error(err);
 		}
 	}
-	
+	// Translate timestamp to readable date and time
 	showTime(timestamp){
 		let time = new Date(timestamp);
 		return time.toUTCString();

@@ -1,3 +1,12 @@
+/*
+	This screen let user to login.
+	Formik and Yup are used to validate the form.
+	User will be redirect to home screen if user successfully logged in,
+	else will be staying at the same screen.
+	The token will also be saved in AsyncStorage for future use after user logged in.
+	User can also sign up by clicking the orange link below.
+*/
+
 import React, {Component, Fragment} from 'react';
 import {StyleSheet, SafeAreaView, View, Text, Alert, AsyncStorage} from 'react-native';
 import {Button, Icon, Image} from 'react-native-elements';

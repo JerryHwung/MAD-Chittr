@@ -1,3 +1,7 @@
+// This script contains the whole navigation structure of the app
+// The top level is the drawer navigator then the stacks and tabs
+// There are stacks within the tab navigator too
+
 import React, {Compoenent} from 'react';
 import{Text, View} from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -18,7 +22,6 @@ import SignUp from './screens/SignUp'
 
 // MainStack screens
 import HomeScreen from './screens/HomeScreen'
-import Chit from './screens/Chit'
 
 // Tabs' screens
 import Search from './screens/Search'
@@ -34,9 +37,6 @@ export const MainStack = createStackNavigator({
 	Home: {
 		screen: HomeScreen
 	},
-	Chit: {
-		screen: Chit
-	}
 })
 
 export const OtherUserStack = createStackNavigator({
@@ -53,7 +53,7 @@ export const OtherUserStack = createStackNavigator({
 		screen: Following
 	}
 })
-
+// Removed the header of post chit screen
 export const PostChitStack = createStackNavigator({
 	Create: {
 		screen: PostChit,
@@ -65,7 +65,8 @@ export const PostChitStack = createStackNavigator({
 		screen: capturePhoto
 	}
 })
-
+// Inserted icons for each tab
+// So people who can't read english could at least know the icons
 export const Tabs = createBottomTabNavigator({
 	Home: {
 		screen: MainStack,
@@ -114,7 +115,7 @@ export const LoginStack = createStackNavigator({
 	}
 })
 
-
+// The top level must be render last else will return error
 export const Drawer = createDrawerNavigator({
 	Home: {screen: Tabs},
 	Login: {screen: LoginStack},

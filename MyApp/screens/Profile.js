@@ -1,11 +1,20 @@
+// Profile page(user's)
+/* 
+	Requires user to login to show any information in this page
+	otherwise will only shows buttons and an empty avatar.
+	Haven't handle errors when user tries to click button without logged in
+	Profile screen let's user to edit user's avatar and a button to redirect
+	to edit profile screen.
+	The only way for user to logout is the logout button here.
+	Recent chits will be shown below too, although they are clickable, but
+	it does nothing at all. (Was expecting to implement view chit in another screen.)
+*/
 import React, {Component} from 'react';
 import {StyleSheet, Alert, Text, View, ActivityIndicator, FlatList, Image, Button, TouchableOpacity, AsyncStorage} from 'react-native';
 import {NavigationEvents} from 'react-navigation';
 import {ListItem, Avatar} from 'react-native-elements';
 import FormButton from '../components/FormButton'
 import {baseUrl} from '../components/baseUrl'
-
-const profilePic = require('../images/default.jpg');
 
 class Profile extends Component{
 	// Constructor to set the states
@@ -18,7 +27,7 @@ class Profile extends Component{
 			auth:{}
 		}
 	}
-	
+	// Remove token and resets states similar to remove session
 	async removeUser(){
 		try{
 			await AsyncStorage.removeItem('auth');
@@ -33,7 +42,7 @@ class Profile extends Component{
 			console.log(exception);
 		}
 	}
-	
+	// Retrieve authorization info and data about user
 	async getUser(){
 		let response = await AsyncStorage.getItem('auth');
 		let authKey = await JSON.parse(response) || {};
@@ -56,7 +65,7 @@ class Profile extends Component{
 			console.log(error);
 		});
 	}
-	
+	// Extract and read the base64 image
 	getPhoto(id){
 		return fetch(baseUrl+'/user/'+id+'/photo')
 		.then(response => response.blob())
@@ -78,7 +87,7 @@ class Profile extends Component{
 	componentDidMount(){
 		this.getUser();
 	}
-	
+	// User able to change image by clicking on avatar
 	imagePressed(){
 		this.props.navigation.navigate('EditPhoto')
 	}
@@ -93,6 +102,7 @@ class Profile extends Component{
 				</View>
 			)
 		}
+		else{
 		return(
 			<View style={{flex: 1}}>
 			<NavigationEvents onDidFocus={() => this.getUser()}/>
@@ -139,9 +149,10 @@ class Profile extends Component{
 						keyExtractor={({chit_id}, index) => chit_id.toString()}
 					/>
 			</View>
-		);
+		);}
 	}
 	// Logout function
+	// Brings user back to homepage upon clicking logout
 	Logout = () =>{
 		return fetch(baseUrl+'/logout', {
 			method: 'POST',

@@ -1,3 +1,13 @@
+/*
+	Only way to get here is through search screen, user will get details 
+	of the selected user. User also able to follow/unfollow other user 
+	in this screen. User can even check who is folowing and how many followers.
+	The only way to see followers and following for user is to search themselves
+	now. Unfortuantely newly followed/unfollowed result will not show immediately
+	on screen but the follow button will change accordingly.
+	Users' profile picture in here is using the default as placholder now.
+*/
+
 import React, {Component} from 'react';
 import {StyleSheet, FlatList, ActivityIndicator, Text, View, Image, AsyncStorage} from 'react-native';
 import {Button, ListItem} from 'react-native-elements';
@@ -24,19 +34,23 @@ export default class OtherProfile extends Component{
 	goToFollowers(){this.props.navigation.navigate('Followers');}
 	
 	goToFollowing(){this.props.navigation.navigate('Following');}
-	
+	// Extract token and param from previous navigator
+	// then extract data using the param
 	async getUser(){
-		let response = await AsyncStorage.getItem('auth');
-		let authKey = await JSON.parse(response) || {};
-		let id = JSON.parse(await AsyncStorage.getItem('id'));
-		
-		this.setState({
-			auth: authKey,
-			userID: id
-		});
-		this.getData(id);
-		this.getFollowers(id);
-		this.getFollowing(id);
+		try{
+			let response = await AsyncStorage.getItem('auth');
+			let authKey = await JSON.parse(response) || {};
+			let id = JSON.parse(await AsyncStorage.getItem('id'));
+			this.setState({
+				auth: authKey,
+				userID: id
+			});
+			this.getData(id);
+			this.getFollowers(id);
+			this.getFollowing(id);
+		}catch(err){
+			console.log(err);
+		}
 	}
 	// A function to do GET/user request to retrieve user details
 	getData(id){
@@ -91,7 +105,8 @@ export default class OtherProfile extends Component{
 	componentDidMount(){
 		this.getUser();
 	}
-	
+	// Act accrodingly to state of button,
+	// to decide follow or unfollow
 	follow(){
 		let id = this.state.userID
 		let key = this.state.auth.token

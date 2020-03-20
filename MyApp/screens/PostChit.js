@@ -1,3 +1,17 @@
+/*
+	This script is for creating new post/chit.
+	Logged in user can attach one image and tag a location in each post/chit.
+	User can also save unfinished text(only) to draft by clicking the red cross at
+	the top left corner.(Was expecting to trigger whenever user leaves the page)
+	A draft button will show up if user has saved any draft(s), and it will show 
+	an overlay with lickable list to retrieve draft.
+	Text is limited to 141 a counter beside the Post button will show user how many words left.
+	User can also cancel the tagged location and image before posting with the red cross
+	icon on their right.
+	Every time user try to post a chit, an alert will show whether it is success or fail.
+	(Should have try to implement breadcrumbs for more the aesthetic...)
+*/
+
 import React, {Component} from 'react';
 import {StyleSheet, FlatList, Image, Text, View, TextInput, AsyncStorage, Alert, PermissionsAndroid} from 'react-native';
 import {Button, Icon, Overlay, ListItem} from 'react-native-elements';
@@ -25,7 +39,8 @@ class PostChit extends Component{
 			numChar: 141
 		}
 	}
-	
+	// The filter here is to get a list without the selected object
+	// hence 'removed' the selected object.
 	handleDraft = (msg) => {
 		let temp = this.state.draft.filter(item=>item.msg != msg);
 		this.setState({
@@ -35,6 +50,7 @@ class PostChit extends Component{
 		});
 	}
 	
+	// Geolocating and reverse geocoding are done in here
 	handleLocation = () => {
 		if(!this.state.locationPermission){
 			this.state.locationPermission = requestLocationPermission();
@@ -75,6 +91,8 @@ class PostChit extends Component{
 		this.setState({image})
 	}
 	
+	// To handle the image received from capture photo screen
+	// and also redirect to capture photo screen
 	handleImage = () => {
 		this.props.navigation.navigate('Photo',{receivedImage: this.receivedImage});
 	}
@@ -108,7 +126,8 @@ class PostChit extends Component{
 			console.log(error);
 		});
 	}
-	
+	// Contains two version of fetch api
+	// One is with location in body another without
 	postChit(token){
 		
 		if(this.state.coords == null){
@@ -181,7 +200,9 @@ class PostChit extends Component{
 			})
 		}
 	}
-	
+	// To retrieve user's token and draft(s) belongs to user
+	// The JSON.parse is to load the json string to object
+	// because AsyncStorage only saves string.
 	async getUser(){
 		try{
 			let response = await AsyncStorage.getItem('auth');
@@ -220,7 +241,7 @@ class PostChit extends Component{
 			console.log(error);
 		});
 	}
-	
+	// reset state and redirect to home screen 
 	resetInOverlay(){
 		this.setState({
 			isVisible: false,
@@ -235,11 +256,15 @@ class PostChit extends Component{
 		this.props.navigation.navigate('Home');
 	}
 	
+	// Geocoder is initiate here
 	componentDidMount(){
 		this.getUser();
 		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
 	}
-
+	
+	// the onDidFocus() here is to reload user details and draft box
+	// everytime user arrive in this screen. Draft object is stringified 
+	// because AsyncStorage only saves string.
 	render(){
 		return(
 			<View>
@@ -415,7 +440,7 @@ const styles = StyleSheet.create({
 		padding: 15,
 	},
 })
-
+// Request permission to get location
 async function requestLocationPermission(){
 	try {
 		const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,

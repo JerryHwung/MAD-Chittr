@@ -1,3 +1,10 @@
+/*
+	User can create new account here.
+	All fields are required to create a account, the form
+	is validate with Formik and Yup.
+	User will be redirect to log in page after successfully created a account.
+*/
+
 import React, {Component, Fragment} from 'react';
 import {StyleSheet, SafeAreaView, View, Text, Alert} from 'react-native';
 import {Button, Icon} from 'react-native-elements';

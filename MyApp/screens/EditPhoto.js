@@ -1,3 +1,8 @@
+/*
+	Just a camera to change avatar image, the image is change upon clicking capture.
+	Only problem is not able to have a preview before submitting your photo.
+*/
+
 import React,{Component, Fragment} from 'react';
 import { View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert, Image, Button } from 'react-native';
 import {RNCamera} from 'react-native-camera';

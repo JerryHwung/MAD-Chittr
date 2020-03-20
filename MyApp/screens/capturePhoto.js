@@ -1,3 +1,10 @@
+/*
+	This screen is similar to editphoto.js, but this screen return
+	the captured image back to postchit.js to let user to preview 
+	instead of instant post the image.
+	(Although it is impossible to post without the chit id)
+*/
+
 import React,{Component, Fragment} from 'react';
 import { View, Text, StyleSheet, AsyncStorage, TouchableOpacity, Alert, Image, Button } from 'react-native';
 import {RNCamera} from 'react-native-camera';

@@ -1,9 +1,17 @@
+/*
+	This screen is to search users by typing keywords in the search bar.
+	A fetch request is called when the text in search bar is change.
+	There is a problem when user hit backspace too fast and left nothing in the
+	search bar will not clear the result below. (Maybe add setTimeOut could solve it)
+	User can click on the search result and get redirect to profile(other users) screen.
+	User can see themselves in the result too...
+	Sadly there are no profile picture for every user now used icon to substitute
+*/
+
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, AsyncStorage} from 'react-native';
 import {SearchBar, ListItem} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl'
-
-const profilePic = require('../images/default.jpg');
 
 export default class Search extends Component{
 	
@@ -15,16 +23,8 @@ export default class Search extends Component{
 			search: '',
 		}
 	}
-	
-	async storeId(id){
-		try{
-			// Asyncstorage only store strings hence id need to be string
-			await AsyncStorage.setItem('id', JSON.stringify(id));
-		} catch (error) {
-			console.log(error.message);
-		}
-	}
-	
+
+	// Everytime user typed will trigger this function
 	updateSearch = text => {
 		// change state of 'search'
 		this.setState({search: text});
@@ -46,6 +46,15 @@ export default class Search extends Component{
 		}
 	}
 	
+	async storeId(id){
+		try{
+			// Asyncstorage only store strings hence id need to be string
+			await AsyncStorage.setItem('id', JSON.stringify(id));
+		} catch (error) {
+			console.log(error.message);
+		}
+	}
+	
 	// Navigate to OtherProfile after saving the id in AsyncStorage
 	moreDetails = id => {
 		this.storeId(id);
@@ -64,7 +73,7 @@ export default class Search extends Component{
 					data={this.state.userListData}
 					renderItem={({item}) => (
 						<ListItem
-							leftAvatar={{source: {profilePic}}}
+							leftIcon={{ name: 'person' }}
 							title={`${item.given_name} ${item.family_name}`}
 							subtitle={item.email}
 							bottomDivider

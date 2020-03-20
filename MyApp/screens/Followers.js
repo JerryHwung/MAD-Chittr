@@ -1,3 +1,9 @@
+/*
+	A screen to show list of followers, the list items are 
+	clickable and will redirect user to that particular user
+	profile.
+*/
+
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, AsyncStorage} from 'react-native';
 import {ListItem} from 'react-native-elements';
