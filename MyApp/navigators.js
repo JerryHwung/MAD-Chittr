@@ -1,5 +1,6 @@
 import React, {Compoenent} from 'react';
 import{Text, View} from 'react-native';
+import {Icon} from 'react-native-elements';
 
 // Navigators
 import {createStackNavigator} from 'react-navigation-stack';
@@ -55,7 +56,10 @@ export const OtherUserStack = createStackNavigator({
 
 export const PostChitStack = createStackNavigator({
 	Create: {
-		screen: PostChit
+		screen: PostChit,
+		navigationOptions: {
+			headerShown: false,
+		},
 	},
 	Photo: {
 		screen: capturePhoto
@@ -64,13 +68,28 @@ export const PostChitStack = createStackNavigator({
 
 export const Tabs = createBottomTabNavigator({
 	Home: {
-		screen: MainStack
+		screen: MainStack,
+		navigationOptions:{
+			tabBarIcon:({tintColor}) => (
+				<Icon name='home'/>
+			)
+		},
 	},
 	Create: {
-		screen: PostChitStack
+		screen: PostChitStack,
+		navigationOptions:{
+			tabBarIcon:({tintColor}) => (
+				<Icon name='add'/>
+			)
+		},
 	},
 	Search: {
-		screen: OtherUserStack
+		screen: OtherUserStack,
+		navigationOptions:{
+			tabBarIcon:({tintColor}) => (
+				<Icon name='search'/>
+			)
+		},
 	}
 })
 

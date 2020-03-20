@@ -23,6 +23,11 @@ class Profile extends Component{
 		try{
 			await AsyncStorage.removeItem('auth');
 			console.log("key removed");
+			this.setState({
+				photo: null,
+				userDetails: {},
+				auth: {},
+			});
 		}
 		catch(exception){
 			console.log(exception);

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {StyleSheet, Image, Text, View, TextInput, AsyncStorage, Alert, PermissionsAndroid} from 'react-native';
-import {Button, Icon} from 'react-native-elements';
+import {StyleSheet, FlatList, Image, Text, View, TextInput, AsyncStorage, Alert, PermissionsAndroid} from 'react-native';
+import {Button, Icon, Overlay, ListItem} from 'react-native-elements';
 import {baseUrl} from '../components/baseUrl'
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
+import {NavigationEvents} from 'react-navigation';
 
 // This screen will contain a textarea to let user create chits
 class PostChit extends Component{
@@ -11,6 +12,9 @@ class PostChit extends Component{
 	constructor(props){
 		super(props);
 		this.state={
+			isVisible: false,
+			showDraft: false,
+			draft: null,
 			chitId: '',
 			auth: {},
 			image: null,
@@ -20,6 +24,15 @@ class PostChit extends Component{
 			text: '',
 			numChar: 141
 		}
+	}
+	
+	handleDraft = (msg) => {
+		let temp = this.state.draft.filter(item=>item.msg != msg);
+		this.setState({
+			showDraft: false,
+			draft: temp,
+			text: msg
+		});
 	}
 	
 	handleLocation = () => {
@@ -39,7 +52,6 @@ class PostChit extends Component{
 				// Reverse geocoding to get address
 				Geocoder.from(position.coords.latitude, position.coords.longitude)
 				.then(json => {
-					console.log(json);
 					let addressComponent = json.results[5].formatted_address;
 					this.setState({
 						location: addressComponent
@@ -67,7 +79,7 @@ class PostChit extends Component{
 		this.props.navigation.navigate('Photo',{receivedImage: this.receivedImage});
 	}
 	
-	// This async function will get the first chit's id(which is the latest chit)
+	// This async function will get the first recent chit's id(which is the latest chit)
 	// then upload the photo to that chit.
 	async uploadPhoto(){
 		await this.getChitId(this.state.auth.id)
@@ -171,12 +183,28 @@ class PostChit extends Component{
 	}
 	
 	async getUser(){
-		let response = await AsyncStorage.getItem('auth');
-		let authKey = await JSON.parse(response) || {};
-		this.setState({
-			auth: authKey
-		});
-		console.log(this.state.auth);
+		try{
+			let response = await AsyncStorage.getItem('auth');
+			let authKey = await JSON.parse(response) || {};
+			this.setState({
+				auth: authKey
+			});
+			console.log(this.state.auth);
+		}catch(err){
+			console.log(err);
+		}
+		try{
+			let resp = await AsyncStorage.getItem('draft');
+			let draft = await JSON.parse(resp) || [];
+			let result = await draft.filter(item => item.id == this.state.auth.id);
+			this.setState({
+				draft: result,
+			});
+			console.log(this.state.draft);
+		}catch(err){
+			console.log(err);
+		}
+		
 	}
 	// A function to do GET/user request to retrieve user details
 	getChitId(id){ 
@@ -193,6 +221,20 @@ class PostChit extends Component{
 		});
 	}
 	
+	resetInOverlay(){
+		this.setState({
+			isVisible: false,
+			draft: null,
+			image: null,
+			location: null,
+			coords: null,
+			locationPermission: false,
+			text: '',
+			numChar: 141
+		})
+		this.props.navigation.navigate('Home');
+	}
+	
 	componentDidMount(){
 		this.getUser();
 		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
@@ -201,6 +243,80 @@ class PostChit extends Component{
 	render(){
 		return(
 			<View>
+				<NavigationEvents onDidFocus={() => this.getUser()}/>
+				<View style={{flexDirection: 'row', marginLeft: 20, marginTop: 20}}>
+				<Icon
+					name='close'
+					type='evilicon'
+					color='#FF7256'
+					size={40}
+					onPress={()=>this.setState({isVisible: true})}
+				/>
+				</View>
+				<Overlay
+					isVisible={this.state.showDraft}
+					onBackdropPress={()=>this.setState({showDraft: false})}>
+					<View>
+						<FlatList
+							keyExtractor={(item,index)=>index.toString()}
+							data={this.state.draft}
+							renderItem={({item})=>(
+								<ListItem
+									title={item.msg}
+									bottomDivider
+									chevron
+									onPress={()=>{this.handleDraft(item.msg)}}
+								/>
+							)}
+						/>
+					</View>
+				</Overlay>
+				<Overlay
+					width='auto'
+					height='auto'
+					isVisible={this.state.isVisible}
+					onBackdropPress={()=>this.setState({isVisible: false})}>
+					<View style={{margin: 50}}>
+						<Text style={{textAlign: 'center'}}>Save draft?</Text>
+						<View style={{flexDirection: 'row', justifyContent: 'center'}}>
+						<Button
+							title='Delete'
+							type='clear'
+							onPress={async()=>{
+								try{
+									let tempList = [];
+									if(this.state.draft != null){
+										tempList = this.state.draft;
+									}
+									let draft = await JSON.stringify(tempList);
+									await AsyncStorage.setItem('draft', draft);
+								}catch(err){
+									console.log(err);
+								}
+								this.resetInOverlay()
+							}}
+						/>
+						<Button
+							title='Save'
+							type='clear'
+							onPress={async()=>{
+								try{
+									let tempList = [];
+									if(this.state.draft != null){
+										tempList = this.state.draft;
+									}
+									let resp = await tempList.push({id: this.state.auth.id, msg: this.state.text});
+									let draft = await JSON.stringify(tempList);
+									await AsyncStorage.setItem('draft', draft);
+								}catch(err){
+									console.log(err)
+								}
+								this.resetInOverlay()
+							}}
+						/>
+						</View>
+					</View>
+				</Overlay>
 				<TextInput
 					style={styles.textbox}
 					multiline={true}
@@ -211,6 +327,12 @@ class PostChit extends Component{
 					value={this.state.text}
 				/>
 				<View style={styles.buttonContainer}>
+					{this.state.draft != null&&
+						<Button
+							title='draft'
+							onPress={()=>this.setState({showDraft: true})}
+						/>
+					}
 					<Icon
 						name='image'
 						type='evilicon'
@@ -266,7 +388,7 @@ class PostChit extends Component{
 								});
 							}}
 						/>
-					</View>		
+					</View>
 				}
 				
 			</View>
@@ -277,6 +399,7 @@ class PostChit extends Component{
 const styles = StyleSheet.create({
 	textbox: {
 		fontSize: 25,
+		marginLeft: 20,
 	},
 	counter: {
 		fontSize: 25,

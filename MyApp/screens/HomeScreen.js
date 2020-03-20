@@ -5,6 +5,7 @@ import {ListItem, Image, Card, Avatar, Divider, Icon} from 'react-native-element
 import {baseUrl} from '../components/baseUrl';
 import Geocoder from 'react-native-geocoding';
 
+const profilePic = require('../images/default.jpg');
 // This is the home screen which contains a chit list
 class HomeScreen extends Component{
 	// Constructor to set the states
@@ -189,6 +190,11 @@ class HomeScreen extends Component{
 								titleStyle={{textAlign: 'left'}} 
 								title={
 									<View style={styles.header}>
+										<Avatar 
+											rounded
+											source={profilePic}
+											containerStyle={{marginRight: 20, marginTop: 5}}
+										/>
 										<Text style={{flex: 1, flexWrap: 'wrap'}}>{item.user.given_name} {item.user.family_name}</Text>
 										<Text style={{flex: 2, color: 'gray'}}>{this.showTime(item.timestamp)}</Text>
 									</View>
@@ -219,7 +225,7 @@ class HomeScreen extends Component{
 const styles = StyleSheet.create({
 	header: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		justifyContent: 'space-around',
 	},
 	divider: {
 		backgroundColor:'gray', 

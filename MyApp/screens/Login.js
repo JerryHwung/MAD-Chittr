@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {StyleSheet, SafeAreaView, View, Text, Alert, AsyncStorage} from 'react-native';
-import {Button, Icon} from 'react-native-elements';
+import {Button, Icon, Image} from 'react-native-elements';
 import { Formik } from 'formik';
 import {NavigationActions} from 'react-navigation';
 import FormInput from '../components/FormInput'
@@ -8,6 +8,8 @@ import FormButton from '../components/FormButton'
 import * as yup from 'yup'
 import ErrorMessage from '../components/ErrorMessage'
 import {baseUrl} from '../components/baseUrl'
+
+const logo = require('../images/Logo.jpg');
 
 export default class Login extends Component{
 	
@@ -70,6 +72,12 @@ export default class Login extends Component{
 				>
 					{({handleChange, values, handleSubmit, errors, isValid, isSubmitting, touched, handleBlur}) => (
 						<Fragment>
+							<View style={{alignItems: 'center'}}>
+							<Image
+								source={logo}
+								style={{width: 260, height: 80}}
+							/>
+							</View>
 							<ErrorMessage errorValue={touched.family_name && errors.family_name} />
 							<FormInput
 								name="Email"
