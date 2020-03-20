@@ -22,7 +22,7 @@ const logo = require('../images/Logo.jpg');
 
 export default class Login extends Component{
 	
-	handleSubmit = values => {
+	handleSubmit = (values) => {
 		
 		if(values.email.length>0 && values.password.length>0){
 			return fetch (baseUrl+'/login',
@@ -38,18 +38,18 @@ export default class Login extends Component{
 				})
 			})
 			.then((response) => {
-				if(response.status == "200"){
+				if(response.status == '200'){
 					this.props.navigation.navigate('Home')
 					// reponse.json() here requires return
 					// because it is within {}
 					return response.json()
 				} else {
-					Alert.alert("Wrong email/password!")
+					Alert.alert('Wrong email/password!')
 					// return empty object to handle warning
 					return {}
 				}
 			})
-			.then(responseJson => {
+			.then((responseJson) => {
 				// extract token and id for authorisation
 				console.log(responseJson);
 				// Store it with AsyncStorage
@@ -89,44 +89,44 @@ export default class Login extends Component{
 							</View>
 							<ErrorMessage errorValue={touched.family_name && errors.family_name} />
 							<FormInput
-								name="Email"
+								name='Email'
 								value={values.email}
-								placeholder="Enter Email"
-								autoCapitalize="none"
+								placeholder='Enter Email'
+								autoCapitalize='none'
 								onChangeText={handleChange('email')}
-								iconName="email"
-								iconColor="#2C384A"
+								iconName='email'
+								iconColor='#2C384A'
 								onBlur={handleBlur('email')}
 							/>
 							<ErrorMessage errorValue={touched.email && errors.email} />
 							<FormInput
-								name="Password"
+								name='Password'
 								value={values.password}
-								placeholder="Enter Password"
+								placeholder='Enter Password'
 								secureTextEntry
 								onChangeText={handleChange('password')}
-								iconName="lock"
-								iconColor="#2C384A"
+								iconName='lock'
+								iconColor='#2C384A'
 								onBlur={handleBlur('password')}
 							/>
 							<ErrorMessage errorValue={touched.password && errors.password} />
 							
 							<View style={styles.buttonContainer}>
 								<FormButton
-									buttonType="outline"
+									buttonType='outline'
 									onPress={handleSubmit}
-									title="LOGIN"
-									buttonColor="#039BE5"
+									title='LOGIN'
+									buttonColor='#039BE5'
 									disabled={!isValid}
 								/>
 							</View>
 							<Button
-								title="Not a member? Join Chittr today!"
+								title='Not a member? Join Chittr today!'
 								onPress={this.goToSignup}
 								titleStyle={{
 									color: '#F57c00'
 								}}
-								type="clear"
+								type='clear'
 							/>
 						</Fragment>
 					)}

@@ -42,13 +42,13 @@ export default class HomeScreen extends Component{
 	
 	componentDidMount(){
 		// Initiate geocoder for reverse geocoding, the string is my API Key
-		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
+		Geocoder.init('AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw');
 		this.getData()
 		.then(async()=>{
 			// Async function to retrieve photo
 			const list = [];
 			const addressList = [];
-			for(var chit of this.state.chitListData){
+			for(let chit of this.state.chitListData){
 				// get photos
 				try{
 					let data = await this.getPhoto(chit.chit_id)
@@ -84,7 +84,7 @@ export default class HomeScreen extends Component{
 		.then(async()=>{
 			const list = [];
 			const addressList = [];
-			for(var chit of this.state.chitListData){
+			for(let chit of this.state.chitListData){
 				try{
 					let data = await this.getPhoto(chit.chit_id)
 					let img = await this.readFileAsync(data)
@@ -113,7 +113,7 @@ export default class HomeScreen extends Component{
 	
 	// Used promise wrapper for file reading
 	// to prevent decode string set in wrong id
-	readFileAsync=file=>{
+	readFileAsync=(file)=>{
 		return new Promise((resolve, reject)=>{
 			let reader = new FileReader();
 			reader.onload = () => {
@@ -139,7 +139,7 @@ export default class HomeScreen extends Component{
 		}, function(){this.getApiData()});
 	}
 	// Get image uri from state and return an image
-	showImage = chit_id =>{
+	showImage = (chit_id) =>{
 		let response = this.state.photoList.find(img => img.id == chit_id);
 		if(response){
 		return (<Image source={{uri: response.image}} style={{height: 200, width: 200}}/>)
@@ -147,7 +147,7 @@ export default class HomeScreen extends Component{
 	}
 	// A small icon is added beside the readable address
 	// to indicate it is a loaction(also the text color is different)
-	showLocation = chit_id =>{
+	showLocation = (chit_id) =>{
 		let response = this.state.locationList.find(add => add.id == chit_id);
 		if(response){
 			return (
@@ -175,7 +175,7 @@ export default class HomeScreen extends Component{
 		}
 	}
 	// Translate timestamp to readable date and time
-	showTime=timestamp=>{
+	showTime=(timestamp)=>{
 		let time = new Date(timestamp);
 		return time.toUTCString();
 	}

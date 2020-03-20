@@ -34,13 +34,13 @@ export default class SignUp extends Component{
 				})
 			})
 			.then((response)=>{
-				if(response.status == "201"){
-					Alert.alert("Create account successfully!")
+				if(response.status == '201'){
+					Alert.alert('Create account successfully!')
 					setTimeout(() => {
 						this.props.navigation.navigate('Login')
 					}, 3000)
 				} else {
-					Alert.alert("Fail to create account...")
+					Alert.alert('Fail to create account...')
 					setTimeout(() => {
 						this.props.navigation.navigate('Login')
 					}, 3000)
@@ -64,56 +64,56 @@ export default class SignUp extends Component{
 					{({handleChange, values, handleSubmit, errors, isValid, isSubmitting, touched, handleBlur}) => (
 						<Fragment>
 							<FormInput
-								name="Given Name"
+								name='Given Name'
 								value={values.given_name}
-								placeholder="Enter Given Name"
-								autoCapitalize="none"
+								placeholder='Enter Given Name'
+								autoCapitalize='none'
 								onChangeText={handleChange('given_name')}
-								iconName="person"
-								iconColor="#2C384A"
+								iconName='person'
+								iconColor='#2C384A'
 								onBlur={handleBlur('given_name')}
 							/>
 							<ErrorMessage errorValue={touched.given_name && errors.given_name} />
 							<FormInput
-								name="Family Name"
+								name='Family Name'
 								value={values.family_name}
-								placeholder="Enter Family Name"
-								autoCapitalize="none"
+								placeholder='Enter Family Name'
+								autoCapitalize='none'
 								onChangeText={handleChange('family_name')}
-								iconName="people"
-								iconColor="#2C384A"
+								iconName='people'
+								iconColor='#2C384A'
 								onBlur={handleBlur('family_name')}
 							/>
 							<ErrorMessage errorValue={touched.family_name && errors.family_name} />
 							<FormInput
-								name="Email"
+								name='Email'
 								value={values.email}
-								placeholder="Enter Email"
-								autoCapitalize="none"
+								placeholder='Enter Email'
+								autoCapitalize='none'
 								onChangeText={handleChange('email')}
-								iconName="email"
-								iconColor="#2C384A"
+								iconName='email'
+								iconColor='#2C384A'
 								onBlur={handleBlur('email')}
 							/>
 							<ErrorMessage errorValue={touched.email && errors.email} />
 							<FormInput
-								name="Password"
+								name='Password'
 								value={values.password}
-								placeholder="Enter Password"
+								placeholder='Enter Password'
 								secureTextEntry
 								onChangeText={handleChange('password')}
-								iconName="lock"
-								iconColor="#2C384A"
+								iconName='lock'
+								iconColor='#2C384A'
 								onBlur={handleBlur('password')}
 							/>
 							<ErrorMessage errorValue={touched.password && errors.password} />
 							
 							<View style={styles.buttonContainer}>
 								<FormButton
-									buttonType="outline"
+									buttonType='outline'
 									onPress={handleSubmit}
-									title="Sign Up"
-									buttonColor="#039BE5"
+									title='Sign Up'
+									buttonColor='#039BE5'
 									disabled={!isValid || isSubmitting}
 									loading = {isSubmitting}
 								/>

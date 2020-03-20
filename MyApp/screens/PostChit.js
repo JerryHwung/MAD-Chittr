@@ -145,13 +145,13 @@ export default class PostChit extends Component{
 				})
 			})
 			.then((response)=>{
-				if(response.status == "201"){
+				if(response.status == '201'){
 				// Upload image if the chit post successfully
 				// and image is not empty object
 					if(this.state.image != null){
 						this.uploadPhoto();
 					}
-					Alert.alert("Chit posted successfully!")
+					Alert.alert('Chit posted successfully!')
 					// reset state
 					this.setState({
 						text: '',
@@ -160,7 +160,7 @@ export default class PostChit extends Component{
 						location: null,
 					});
 				} else {
-					Alert.alert("Chit failed to post...")
+					Alert.alert('Chit failed to post...')
 				}
 			})
 		}
@@ -180,13 +180,13 @@ export default class PostChit extends Component{
 				})
 			})
 			.then((response)=>{
-				if(response.status == "201"){
+				if(response.status == '201'){
 				// Upload image if the chit post successfully
 				// and image is not empty object
 					if(this.state.image != null){
 						this.uploadPhoto();
 					}
-					Alert.alert("Chit posted successfully!")
+					Alert.alert('Chit posted successfully!')
 					// reset state
 					this.setState({
 						text: '',
@@ -195,7 +195,7 @@ export default class PostChit extends Component{
 						location: null,
 					});
 				} else {
-					Alert.alert("Chit failed to post...")
+					Alert.alert('Chit failed to post...')
 				}
 			})
 		}
@@ -259,7 +259,7 @@ export default class PostChit extends Component{
 	// Geocoder is initiate here
 	componentDidMount(){
 		this.getUser();
-		Geocoder.init("AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw");
+		Geocoder.init('AIzaSyDCbAbkl8akmZnC5p2rehOXQAkdn863tpw');
 	}
 	
 	// the onDidFocus() here is to reload user details and draft box
@@ -347,7 +347,7 @@ export default class PostChit extends Component{
 					multiline={true}
 					numberOfLines={5}
 					maxLength={141}
-					placeholder={"What's going on?"}
+					placeholder={`What's going on?`}
 					onChangeText={(text) => this.setState({text, numChar: (141-text.length)})}
 					value={this.state.text}
 				/>
@@ -376,7 +376,7 @@ export default class PostChit extends Component{
 						{this.state.numChar}
 					</Text>
 					<Button 
-						title="Chit"
+						title='Chit'
 						onPress={()=> {this.postChit(this.state.auth.token)}}
 					/>
 				</View>

@@ -48,10 +48,10 @@ export default class EditProfile extends Component {
 				})
 			})
 			.then((response)=>{
-				if(response.status == "201"){
-					Alert.alert("Profile update successfully!")
+				if(response.status == '201'){
+					Alert.alert('Profile update successfully!')
 				} else {
-					Alert.alert("Fail to update...")
+					Alert.alert('Fail to update...')
 				}
 			})
 			.catch((error)=>{
@@ -66,20 +66,24 @@ export default class EditProfile extends Component {
 	}
 	
 	getUser=async()=>{
-		let response = await AsyncStorage.getItem('auth');
-		let authKey = await JSON.parse(response) || {};
-		this.setState({
-			auth: authKey
-		});
-		this.getData(this.state.auth.id)
-		this.getPhoto(this.state.auth.id)
+		try{
+			let response = await AsyncStorage.getItem('auth');
+			let authKey = await JSON.parse(response) || {};
+			this.setState({
+				auth: authKey
+			});
+			this.getData(this.state.auth.id)
+			this.getPhoto(this.state.auth.id)
+		}catch(err){
+			console.log(err);
+		}
 	}
 	
 	getPhoto=id=>{
 		return fetch(baseUrl+'/user/'+id+'/photo')
 		.then(response => response.blob())
 		.then((image)=>{
-			var reader = new FileReader();
+			let reader = new FileReader();
 			reader.onload =()=>{
 				this.setState({
 					isLoading: false,
@@ -126,61 +130,61 @@ export default class EditProfile extends Component {
 							<View style={styles.header}>
 								<View style={styles.buttonContainer}>
 									<FormButton
-										buttonType="outline"
+										buttonType='outline'
 										onPress={handleSubmit}
-										title="SAVE"
-										buttonColor="#FFFFFF"
+										title='SAVE'
+										buttonColor='#FFFFFF'
 									/>
 								</View>
 							</View>
 							<Avatar style={styles.avatar}
-								size="xlarge"
+								size='xlarge'
 								rounded
 								source={{uri: this.state.photo}}
 								onPress={()=>this.imagePressed()}
 								activeOpacity={0.7}
 							/>
 							<FormInput
-								name="Given Name"
+								name='Given Name'
 								value={values.given_name}
-								placeholder="Enter Given Name"
-								autoCapitalize="none"
+								placeholder='Enter Given Name'
+								autoCapitalize='none'
 								onChangeText={handleChange('given_name')}
-								iconName="person"
-								iconColor="#2C384A"
+								iconName='person'
+								iconColor='#2C384A'
 								onBlur={handleBlur('given_name')}
 							/>
 							<ErrorMessage errorValue={touched.given_name && errors.given_name} />
 							<FormInput
-								name="Family Name"
+								name='Family Name'
 								value={values.family_name}
-								placeholder="Enter Family Name"
-								autoCapitalize="none"
+								placeholder='Enter Family Name'
+								autoCapitalize='none'
 								onChangeText={handleChange('family_name')}
-								iconName="people"
-								iconColor="#2C384A"
+								iconName='people'
+								iconColor='#2C384A'
 								onBlur={handleBlur('family_name')}
 							/>
 							<ErrorMessage errorValue={touched.family_name && errors.family_name} />
 							<FormInput
-								name="Email"
+								name='Email'
 								value={values.email}
-								placeholder="Enter Email"
-								autoCapitalize="none"
+								placeholder='Enter Email'
+								autoCapitalize='none'
 								onChangeText={handleChange('email')}
-								iconName="email"
-								iconColor="#2C384A"
+								iconName='email'
+								iconColor='#2C384A'
 								onBlur={handleBlur('email')}
 							/>
 							<ErrorMessage errorValue={touched.email && errors.email} />
 							<FormInput
-								name="Password"
+								name='Password'
 								value={values.password}
-								placeholder="Enter password to save"
+								placeholder='Enter password to save'
 								secureTextEntry
 								onChangeText={handleChange('password')}
-								iconName="lock"
-								iconColor="#2C384A"
+								iconName='lock'
+								iconColor='#2C384A'
 								onBlur={handleBlur('password')}
 							/>
 							<ErrorMessage errorValue={touched.password && errors.password} />
@@ -194,7 +198,7 @@ export default class EditProfile extends Component {
 
 const styles = StyleSheet.create({
 	header:{
-		backgroundColor: "#00BFFF",
+		backgroundColor: '#00BFFF',
 		height:150,
 	},
 	container: {
@@ -206,7 +210,7 @@ const styles = StyleSheet.create({
 		height:130,
 		borderRadius: 63,
 		borderWidth: 4,
-		borderColor: "white",
+		borderColor: 'white',
 		marginBottom: 10,
 		alignSelf: 'center',
 		position: 'absolute',
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
 	},
 	name: {
 		fontSize: 22,
-		color:"#FFFFFF",
+		color:'#FFFFFF',
 		fontWeight:'600',
 	},
 	body: {
@@ -227,12 +231,12 @@ const styles = StyleSheet.create({
 	},
 	name:{
 		fontSize: 28,
-		color: "#696969",
-		fontWeight: "600"
+		color: '#696969',
+		fontWeight: '600'
 	},
 	email:{
 		fontSize: 16,
-		color: "#00BFFF",
+		color: '#00BFFF',
 		marginTop: 10
 	},
 	buttonContainer:{

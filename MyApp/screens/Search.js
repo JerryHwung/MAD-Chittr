@@ -65,7 +65,7 @@ export default class Search extends Component{
 		return(
 			<View style={styles.viewStyle}>
 				<SearchBar
-					placeholder="Type here..."
+					placeholder='Type here...'
 					onChangeText={this.updateSearch}
 					value={this.state.search}
 				/>

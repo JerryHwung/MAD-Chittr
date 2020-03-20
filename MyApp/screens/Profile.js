@@ -31,7 +31,7 @@ export default class Profile extends Component{
 	removeUser=async()=>{
 		try{
 			await AsyncStorage.removeItem('auth');
-			console.log("key removed");
+			console.log('key removed');
 			this.setState({
 				photo: null,
 				userDetails: {},
@@ -70,7 +70,7 @@ export default class Profile extends Component{
 		return fetch(baseUrl+'/user/'+id+'/photo')
 		.then(response => response.blob())
 		.then((image)=>{
-			var reader = new FileReader();
+			let reader = new FileReader();
 			reader.onload =()=>{
 				this.setState({
 					isLoading: false,
@@ -109,21 +109,21 @@ export default class Profile extends Component{
 				<View style={styles.header}>
 					<View style={styles.buttonContainer}>
 						<FormButton
-							buttonType="outline"
+							buttonType='outline'
 							onPress={() => this.props.navigation.navigate('EditProfile')}
-							title="Edit"
-							buttonColor="#FFFFFF"
+							title='Edit'
+							buttonColor='#FFFFFF'
 						/>
 						<FormButton
-							buttonType="outline"
+							buttonType='outline'
 							onPress={this.Logout}
-							title="Logout"
-							buttonColor="#FFFFFF"
+							title='Logout'
+							buttonColor='#FFFFFF'
 						/>
 					</View>
 				</View>
 				<Avatar style={styles.avatar}
-					size="xlarge"
+					size='xlarge'
 					rounded
 					source={{uri: this.state.photo}}
 					onPress={()=>this.imagePressed()}
@@ -143,7 +143,7 @@ export default class Profile extends Component{
 								subtitle={new Date(item.timestamp).toUTCString()}
 								bottomDivider
 								chevron
-								onPress={() => console.log("check chit")}
+								onPress={() => console.log('check chit')}
 							/>
 						)}
 						keyExtractor={({chit_id}, index) => chit_id.toString()}
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
 		marginTop: 50
 	},
 	header:{
-		backgroundColor: "#00BFFF",
+		backgroundColor: '#00BFFF',
 		height:150,
 	},
 	avatar:{
@@ -188,13 +188,13 @@ const styles = StyleSheet.create({
 		height:130,
 		borderRadius: 63,
 		borderWidth: 4,
-		borderColor: "white",
+		borderColor: 'white',
 		alignSelf: 'center',
 		marginTop:-60
 	},
 	name: {
 		fontSize: 22,
-		color:"#FFFFFF",
+		color:'#FFFFFF',
 		fontWeight:'600',
 	},
 	body: {
@@ -206,12 +206,12 @@ const styles = StyleSheet.create({
 	},
 	name:{
 		fontSize: 28,
-		color: "#696969",
-		fontWeight: "600"
+		color: '#696969',
+		fontWeight: '600'
 	},
 	email:{
 		fontSize: 16,
-		color: "#00BFFF",
+		color: '#00BFFF',
 		marginTop: 10
 	},
 	buttonContainer:{

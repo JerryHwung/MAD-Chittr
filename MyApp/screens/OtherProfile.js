@@ -168,10 +168,10 @@ export default class OtherProfile extends Component{
 				<View style={styles.header}>
 					<View style={styles.buttonContainer}>
 					<FormButton
-						buttonType="outline"
+						buttonType='outline'
 						onPress={() => this.follow()}
 						title={this.state.isFollowing == false ? 'Follow':'Following'}
-						buttonColor="#FFFFFF"
+						buttonColor='#FFFFFF'
 					/>
 					</View>
 				</View>
@@ -182,20 +182,20 @@ export default class OtherProfile extends Component{
 						<Text style={styles.email}>{this.state.userDetails.email}</Text>
 						<View style={styles.followerContainer}>
 						<Button
-							title={"Followers "+this.state.followers.length}
+							title={'Followers '+this.state.followers.length}
 							onPress={()=>this.goToFollowers()}
 							titleStyle={{
 								color: '#F57c00'
 							}}
-							type="clear"
+							type='clear'
 						/>
 						<Button
-							title={"Following "+this.state.following.length}
+							title={'Following '+this.state.following.length}
 							onPress={()=>this.goToFollowing()}
 							titleStyle={{
 								color: '#F57c00'
 							}}
-							type="clear"
+							type='clear'
 						/>
 				</View>
 					</View>
@@ -208,10 +208,10 @@ export default class OtherProfile extends Component{
 								subtitle={new Date(item.timestamp).toUTCString()}
 								bottomDivider
 								chevron
-								onPress={() => console.log("check chit")}
+								onPress={() => console.log('check chit')}
 							/>
 						)}
-						keyExtractor={({chit_id}, index) => chit_id}
+						keyExtractor={({chit_id}, index) => chit_id.toString()}
 					/>
 			</View>
 		);
@@ -220,7 +220,7 @@ export default class OtherProfile extends Component{
 
 const styles = StyleSheet.create({
 	header:{
-		backgroundColor: "#00BFFF",
+		backgroundColor: '#00BFFF',
 		height:150,
 	},
 	avatar:{
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
 		height:130,
 		borderRadius: 63,
 		borderWidth: 4,
-		borderColor: "white",
+		borderColor: 'white',
 		marginBottom: 10,
 		alignSelf: 'center',
 		position: 'absolute',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
 	},
 	name: {
 		fontSize: 22,
-		color:"#FFFFFF",
+		color:'#FFFFFF',
 		fontWeight:'600',
 	},
 	body: {
@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
 	},
 	name:{
 		fontSize: 28,
-		color: "#696969",
-		fontWeight: "600"
+		color: '#696969',
+		fontWeight: '600'
 	},
 	email:{
 		fontSize: 16,
-		color: "#00BFFF",
+		color: '#00BFFF',
 		marginTop: 10
 	},
 	buttonContainer:{

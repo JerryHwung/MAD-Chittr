@@ -36,8 +36,8 @@ export default class EditPhoto extends Component {
 			return fetch(baseUrl+'/user/photo',{
 				method: 'POST',
 				headers:{
-					"Content-Type": "image/jpeg",
-					"X-Authorization": this.state.auth.token
+					'Content-Type': 'image/jpeg',
+					'X-Authorization': this.state.auth.token
 				},
 				body: data
 			})
